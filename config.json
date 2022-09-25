@@ -1,0 +1,7 @@
+{
+    "host":"localhost",
+    "user":"usofUser",
+    "database":"usof_db",
+    "password":"Goodpassword-1",
+    "jwt":"json-web-token-key"
+}
