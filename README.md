@@ -1,28 +1,3 @@
-<head>
-    <p align="center">
-        <a href="https://github.com/PAXANDDOS/PokeChat/">
-            <img src="https://raw.githubusercontent.com/PAXANDDOS/PAXANDDOS/main/orbimind/logo-full.svg" height="130px">
-        </a>
-        <h2 align="center">Orbimind - where great minds are in the same orbit.</h2>
-    </p>
-</head>
-<p align="center">
-        <a href="https://www.php.net/" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" height="70">
-        </a>
-        <a href="https://laravel.com/" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo.min.svg" height="70">
-        </a>
-        <a href="https://www.mysql.com/" target="_blank">
-            <img src="https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg" height="70">
-        </a>
-        <a href="https://insomnia.rest/" target="_blank">
-            <img src="https://seeklogo.com/images/I/insomnia-logo-A35E09EB19-seeklogo.com.png" height="70">
-        </a>
-        <a href="https://www.seobility.net/en/wiki/REST_API" target="_blank">
-            <img src="https://miro.medium.com/max/790/1*uHzooF1EtgcKn9_XiSST4w.png" height="70">
-        </a>
-</p>
 <h2 id="downloads">:inbox_tray: Downloads</h2>
 <ul>
     <li><a href="https://github.com/PAXANDDOS/orbimind-api/releases/tag/2.0">v2.0 Latest</a> 一 <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/2.0/v2.0-orbimind-api.zip"><b>Download</b></a></li>
