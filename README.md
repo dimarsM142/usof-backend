@@ -17,8 +17,7 @@
 
 <h2>Using the API</h2>
 <p>
-You can send API requests directly from your JS file using the fetch function, or if you wanna just test some things you can use Insomnia or Postman to test! If so, you probably should use Insomnia because I have prepared <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/1.2/Insomnia_Orbimind-public.json">a collection file just for you!</a><br>
-If you are using JavaScript, you should set request header properties <code>Content-Type</code> and <code>Accept</code> to <code>application/json</code> and you are all set.
+To check this API, use the Insomnia or Postman sites. They can be used to easily send requests to the urlsdescribed below. The url type is: <code>http:localhost:3000/api/auth/login</code> .In order to check requests in which you need to use an authorization token, you should use the headers, and additionally add a new "Authorization" and write "Bearer 'your access token'" in its value. To test a url where json data is required, select the json data type and write the ones described below.
 </p>
 <p>
     <b>Here's list of possible user API requests:</b>
@@ -30,37 +29,44 @@ If you are using JavaScript, you should set request header properties <code>Cont
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
+                     <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
                 <td>Register</td>
                 <td><code>POST - /api/auth/register</code></td>
-                <td>json data</td>
+                <td>json data -> {login, password, passwordConfirmation, email, fullName}</td>
+                <td>New user created</td>
             </tr>
             <tr>
                 <td>Login</td>
                 <td><code>POST - /api/auth/login</code></td>
-                <td>json data</td>
+                <td>json data -> {login}</td>
+                <td>json data -> {accessToken, refreshToken}</td>
             </tr>
             <tr>
                 <td>Refresh token</td>
                 <td><code>GET - /api/auth/refresh</code></td>
-                <td>token</td>
+                <td>refresh token</td>
+                <td>json data -> {accessToken, refreshToken}</td>
             </tr>
             <tr>
                 <td>Log out</td>
                 <td><code>POST - /api/auth/logout</code></td>
                 <td>token</td>
+                <td>json data -> {accessToken:"", refreshToken:""}</td>
             </tr>
             <tr>
-                <td>Forgot password</td>
+                <td>Send password-reset</td>
                 <td><code>POST - /api/auth/password-reset</code></td>
-                <td>json data (email)</td>
+                <td>json data ->{email}</td>
+                <td>Link in the email</td>
             </tr>
             <tr>
                 <td>Reset password</td>
                 <td><code>POST - /api/auth/password-reset/token</code></td>
-                <td>json data (password)</td>
+                <td>json data ->{password}</td>
+                <td>Password reset</td>
             </tr>
         </table>
     </p>
