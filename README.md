@@ -22,14 +22,14 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
 <p>
     <b>Here's list of possible user API requests:</b>
     <br>
-    <p><b>Authorization module</b>
+    <p><b>Authorization</b>
         <table width="100%">
             <thead>
                 <tr>
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
-                     <td><b>Expected result</b></td>
+                    <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
@@ -71,49 +71,80 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
         </table>
     </p>
     <br>
-    <p><b>User module</b>
+    <p><b>User</b>
         <table width="100%">
             <thead>
                 <tr>
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
+                    <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
-                <td>Show current user</td>
-                <td><code>GET - /api/users/me</code></td>
-                <td>token</td>
+                <td>Show all users</td>
+                <td><code>GET - /api/users</code></td>
+                <td>access token(admin only)</td>
+                <td>Info about all users</td>
             </tr>
             <tr>
-                <td>Show current user favorites</td>
-                <td><code>GET - /api/users/me/favorites</code></td>
-                <td>token</td>
+                <td>Show specified user</td>
+                <td><code>GET - /api/users/:id</code></td>
+                <td>access token(admin only)</td>
+                <td>Info about specified users(json)</td>
+            </tr>
+             <tr>
+                <td>Show your info</td>
+                <td><code>GET - /api/me/users</code></td>
+                <td>access token</td>
+                <td>Info about you(json)</td>
             </tr>
             <tr>
-                <td>Update current user</td>
-                <td><code>POST - /api/users/me/update</code></td>
-                <td>token, json data</td>
+                <td>Create new user</td>
+                <td><code>POST - /api/users/me/users</code></td>
+                <td>access token(admin only), json data -> {login, password, passwordConfirmation, email, fullName, role}</td>
+                <td>New user created</td>
             </tr>
             <tr>
-                <td>Update current user avatar</td>
-                <td><code>POST - /api/users/avatar</code></td>
-                <td>token, json data (image => binary)</td>
+                <td>Update your avatar</td>
+                <td><code>PATCH - /api/users/me/avatar</code></td>
+                <td>access token, image(select some image)</td>
+                <td>Your avatar updated</td>
+            </tr>
+              <tr>
+                <td>Update avatar</td>
+                <td><code>PATCH - /api/users/avatar/:id</code></td>
+                <td>access token(admin only), image(select some image)</td>
+                <td>Avatar updated</td>
             </tr>
             <tr>
-                <td>Show specific user</td>
-                <td><code>GET - /api/users/{user_id}</code></td>
-                <td>token, user_id</td>
+                <td>Update your post</td>
+                <td><code>POST - /api/me/users</code></td>
+                <td>access token,  json data -> {login, email, fullName}</td>
+                <td>Your avatar updated</td>
+            </tr>
+              <tr>
+                <td>Update post</td>
+                <td><code>POST - /api/users/:id</code></td>
+                <td>access token(admin only),  json data -> {login, email, fullName, role}</td>
+                <td>Post updated</td>
             </tr>
             <tr>
-                <td>Show specific user favorites</td>
-                <td><code>GET - /api/users/{user_id}/favorites</code></td>
-                <td>token, user_id</td>
+                <td>Delete your post</td>
+                <td><code>DELETE - /api/me/users</code></td>
+                <td>access token</td>
+                <td>Your avatar deleted</td>
+            </tr>
+              <tr>
+                <td>Delete post</td>
+                <td><code>DELETE - /api/users/:id</code></td>
+                <td>access token(admin only)</td>
+                <td>Post deleteed</td>
             </tr>
         </table>
     </p>
     <br>
-    <p><b>Posts module</b>
+    <p><b>Posts</b>
         <table width="100%">
             <thead>
                 <tr>
@@ -200,7 +231,7 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
         </table>
     </p>
     <br>
-    <p><b>Categories module</b>
+    <p><b>Categories</b>
         <table width="100%">
             <thead>
                 <tr>
@@ -308,29 +339,6 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                 <tr>
                     <td>?page={integer}</td>
                     <td>Search for posts that are displayed on {integer} page. Each page contains 10 posts.</td>
-                </tr>
-            </thead>
-        </table>
-     </p>
-     <p><b>Categories module</b>
-        <br>
-        <table width="100%">
-            <thead>
-                <tr>
-                    <td><b>Applied filters</b></td>
-                    <td><b>Description</b></td>
-                </tr>
-                <tr>
-                    <td>?search={string}</td>
-                    <td>Search for categories that contains {string} in their title. {string} can be a word or even a letter.</td>
-                </tr>
-                <tr>
-                    <td>?limit={int}</td>
-                    <td>Get {int} quantity of categories.</td>
-                </tr>
-                <tr>
-                    <td>?random={int}</td>
-                    <td>Get random {int} quantity of categories.</td>
                 </tr>
             </thead>
         </table>
