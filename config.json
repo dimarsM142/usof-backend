@@ -1,7 +1,7 @@
 {
-    "host":"localhost",
-    "user":"usofUser",
-    "database":"usof_db",
-    "password":"Goodpassword-1",
+    "host":"eu-cdbr-west-03.cleardb.net",
+    "user": "b6ff2edf200162",
+    "database":"heroku_ac353792d3f617f",
+    "password":"8b84a5ab4ed4e4f",
     "jwt":"json-web-token-key"
 }
