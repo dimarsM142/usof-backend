@@ -1,10 +1,5 @@
 /*USE test_bd;*/
-CREATE DATABASE usof_db;
-
-CREATE USER 'usofUser'@'localhost' IDENTIFIED BY 'Goodpassword-1';
-GRANT ALL ON usof_db.* TO 'usofUser'@'localhost';
-
-USE usof_db;
+USE heroku_ac353792d3f617f;
 
 CREATE TABLE IF NOT EXISTS users(
     userID INT NOT NULL AUTO_INCREMENT,
@@ -35,7 +30,6 @@ CREATE TABLE IF NOT EXISTS posts(
     PRIMARY KEY (postID),
     authorID INT,
     FOREIGN KEY (authorID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
-    categoryID JSON NOT NULL,
     tittle VARCHAR(255) NOT NULL,
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     content TEXT NOT NULL,
