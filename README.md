@@ -101,7 +101,7 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
             </tr>
             <tr>
                 <td>Create new user</td>
-                <td><code>POST - /api/users/me/users</code></td>
+                <td><code>POST - /api/users</code></td>
                 <td>access token(admin only), json data -> {login, password, passwordConfirmation, email, fullName, role}</td>
                 <td>New user created</td>
             </tr>
@@ -119,13 +119,13 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
             </tr>
             <tr>
                 <td>Update your post</td>
-                <td><code>POST - /api/me/users</code></td>
+                <td><code>PATCH - /api/me/users</code></td>
                 <td>access token,  json data -> {login, email, fullName}</td>
                 <td>Your avatar updated</td>
             </tr>
               <tr>
                 <td>Update post</td>
-                <td><code>POST - /api/users/:id</code></td>
+                <td><code>PATCH - /api/users/:id</code></td>
                 <td>access token(admin only),  json data -> {login, email, fullName, role}</td>
                 <td>Post updated</td>
             </tr>
