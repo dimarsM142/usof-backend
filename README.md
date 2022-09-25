@@ -1,43 +1,24 @@
-<h2 id="downloads">:inbox_tray: Downloads</h2>
-<ul>
-    <li><a href="https://github.com/PAXANDDOS/orbimind-api/releases/tag/2.0">v2.0 Latest</a> 一 <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/2.0/v2.0-orbimind-api.zip"><b>Download</b></a></li>
-    <li><a href="https://github.com/PAXANDDOS/orbimind-api/releases/tag/1.2">v1.2</a> 一 <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/1.2/orbimind-api-v1.2.zip"><b>Download</b></a></li>
-    <li><a href="https://github.com/PAXANDDOS/orbimind-api/releases/tag/1.0">v1.0</a> 一 <a href="https://github.com/PAXANDDOS/orbimind-api/archive/refs/tags/1.0.zip"><b>Download</b></a></li>
-</ul>
-
-<h2 id="req">:anchor: Requirements</h2>
-<ul>
-    <li>PHP 8.0.6</li>
-    <li>MySQL 6.x / MariaDB 10.x</li>
-    <li>Composer 2.x</li>
-</ul>
-<p>You can easily install those via Homebrew:<br>
-    <code>brew install php</code><br>
-    <code>brew install mysql</code><br>
-    <code>brew install composer</code>
+<h2 id="req"> Requirements</h2>
+<p>You can easily install those software:<br>
+    <code>sudo apt install nodejs</code><br>
+    <code>sudo apt install npm</code>
+    <code>sudo apt install mysql-server</code><br>
 </p>
 
-<h2>:toolbox: Hosting the API</h2>
-<p>You can easily host this API on your server if you want to. But if you only want to work with data that is used by officical Orbimind, you can skip this step.</p>
-<p><b>To host the API just follow these steps:</b></p>
+<h2> Hosting the API</h2>
+
+<p><b>To host the API follow these steps:</b></p>
 <ol>
-    <li><a href="#req">Check the requirements</a> :point_up:</li>
-    <li><a href="#downloads">Download the latest version</a></li>
-    <li>Open folder in your terminal and run <code>composer install</code></li>
-    <li>Create your database</li>
-    <li>Create <code>.env</code> file and fill it with your data accordingly to <code>.env.example</code> file</li>
-    <li>Run <code>php artisan migrate</code> to fill database with required tables</li>
-    <li>If you want to add some data to database for testing, run <code>php artisan db:seed</code></li>
-    <li>Start the API server with <code>php artisan serve</code></li>
+    <li>Check all requirements above</li>
+    <li>Open folder in your terminal and run <code>npm install</code></li>
+    <li>Create your database. if mysql installed run <code>mysql -u root -p < test.sql</code> and then input password to your root. This is needed to create important tables</li>
+    <li>Start the API server with <code>npm start</code></li>
 </ol>
 
-<h2>:key: Using the API</h2>
-<p>Web application Orbimind has been released! Check out <a href="https://github.com/PAXANDDOS/orbimind-react">orbimind-react</a> for more info!
-<p>But if you want to use my API directly, without interacting with orbimind-react, you are very welcome!</p>
+<h2>Using the API</h2>
 <p>
-You can send API requests directly from your JS file using the fetch function, or if you wanna just test some things you can use Insomnia or Postman! If so, you probably should use Insomnia because I have prepared <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/1.2/Insomnia_Orbimind-public.json">a collection file just for you!</a><br>
+You can send API requests directly from your JS file using the fetch function, or if you wanna just test some things you can use Insomnia or Postman to test! If so, you probably should use Insomnia because I have prepared <a href="https://github.com/PAXANDDOS/orbimind-api/releases/download/1.2/Insomnia_Orbimind-public.json">a collection file just for you!</a><br>
 If you are using JavaScript, you should set request header properties <code>Content-Type</code> and <code>Accept</code> to <code>application/json</code> and you are all set.
-<p>Public version is hosted at <code><a href="https://orbimind.herokuapp.com">https://orbimind.herokuapp.com</a></code></p>
 </p>
 <p>
     <b>Here's list of possible user API requests:</b>
@@ -350,6 +331,3 @@ If you are using JavaScript, you should set request header properties <code>Cont
      </p>
 </p>
 
-<h2>:fox_face: Have a great day!</h2>
-<p><b>Don't forget to check out <a href="https://github.com/PAXANDDOS?tab=repositories">Orbimind with React!</a></b></p>
-<p><b><a href="https://github.com/PAXANDDOS?tab=repositories">Also check out my other projects</a> and <a href="https://paxanddos.github.io">visit my website</a>!</b></p>
