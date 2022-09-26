@@ -1,7 +1,7 @@
 {
-    "host":"eu-cdbr-west-03.cleardb.net",
-    "user": "b6ff2edf200162",
-    "database":"heroku_ac353792d3f617f",
-    "password":"8b84a5ab4ed4e4f",
+    "host":"nuepp3ddzwtnggom.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+    "user": "x0qb2d4g6o4ks2aq",
+    "database":"pz58d8x5ngkmjhbu",
+    "password":"bqieniutlhdw2a2t",
     "jwt":"json-web-token-key"
 }
