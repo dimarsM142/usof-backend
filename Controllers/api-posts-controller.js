@@ -48,7 +48,6 @@ const getPosts = (req, res) => {
             posts.findAllPosts(res, sort, req.query);
         }
         else{
-            //cons
             posts.findAllPosts(res, sort, req.query, decodedToken.result.userID);
         }
     }
@@ -63,6 +62,7 @@ const getPostByID = (req, res) => {
         let token = new Token();
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();
+
         if(decodedToken.isErr){
             posts.findOneByID(res, +req.params.post_id);
         }
@@ -152,7 +152,7 @@ const getLikesOnPost = (req, res) => {
         res.status(404).json({message: "This id is not natural number"});
     }
     else{
-        const accessToken = req.headers.authorization.replace('Bearer ', '');
+        const accessToken = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : ' ';
         let token = new Token();
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();

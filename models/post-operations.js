@@ -88,52 +88,106 @@ class Posts extends Model {
 
     }
     printAllPosts(res, arrOfData, arrOfFilters){
-        let finalRes = [];
-        for(let i = 0; i < arrOfData.length; i++){
-            //let result = this.printOnePost(res, arrOfData, i, finalRes, arrOfFilters, isErr);
-            this.printOnePost(res, arrOfData, i, finalRes, arrOfFilters);
-        }       
-    }
-    printOnePost(res, arrOfData, i, finalRes, arrOfFilters){
-        mysql.query(`SELECT login FROM users WHERE userID=${arrOfData[i].authorID}`, (err, fields)=>{
-                
+       
+        mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
             if(err) {
                 res.status(404).json({message: err});
             }
+            else if(!fieldsUsers[0]) {
+                res.status(404).json({message :"No users in database"});                         
+            }
             else{
-                let categories = [];
-                let isErr = false;
-                //console.log(arrOfData[i].categoryID);
-                for(let j = 0; j < arrOfData[i].categoryID.arr.length; j++){
-                    mysql.query(`SELECT tittle FROM categories WHERE categoryID=${arrOfData[i].categoryID.arr[j]}`, (err, fieldsCategories)=>{
-                        if(err) {
-                            res.status(404).json({message: err});
-                        }
-                        else if(!fieldsCategories[0]) {
-                            res.status(404).json({message :"No such category with this ID"});                         
-                        }
-                        else{
-                            categories.push({tittle: fieldsCategories[0].tittle});
-                            if(j === arrOfData[i].categoryID.arr.length - 1){
-                                let currentObj = {
-                                    author: fields[0].login,
-                                    tittle: arrOfData[i].tittle,
-                                    content: arrOfData[i].content,
-                                    date: arrOfData[i].publishDate,
-                                    status: arrOfData[i].status,
-                                    rating: arrOfData[i].rating,
-                                    categories: categories
+                mysql.query(`SELECT tittle, categoryID FROM categories`,  (err, fieldsCategories)=>{
+                    if(err) {
+                        res.status(404).json({message: err});
+                    }
+                    else if(!fieldsCategories[0]) {
+                        res.status(404).json({message :"No categories in database"});                         
+                    }
+                    else{
+                        let finalRes = [];
+                        for(let i = 0; i < arrOfData.length; i++){
+                            let curAuthor = '';
+                            let categories = [];
+                            for(let j = 0; j < fieldsUsers.length; j++){
+                                if(arrOfData[i].authorID == fieldsUsers[j].userID){
+                                    curAuthor = fieldsUsers[j].login;
+                                    break;
                                 }
-                                finalRes.push(currentObj);
-                                if(i === arrOfData.length - 1){
-                                    //ТУТ ТРЕБА ФІЛЬТР
-                                    res.status(200).json(this.filterResArr(arrOfFilters, finalRes));  
+                            }
+                            for(let k = 0; k < arrOfData[i].categoryID.arr.length; k++){
+                                for(let j = 0; j < fieldsCategories.length; j++){
+                                    if(arrOfData[i].categoryID.arr[k] === fieldsCategories[j].categoryID){
+                                        categories.push(fieldsCategories[j].tittle);
+                                        break;
+                                    }
                                 }
-                                //res.status(200).json({post: fieldsPosts[0].tittle,categoriesToPost: categories});                           
+                            }
+                            let currentObj = {
+                                author: curAuthor,
+                                tittle: arrOfData[i].tittle,
+                                content: arrOfData[i].content,
+                                date: arrOfData[i].publishDate,
+                                status: arrOfData[i].status,
+                                rating: arrOfData[i].rating,
+                                categories: categories
+                            }
+                            finalRes.push(currentObj);
+                        }
+                        
+                        res.status(200).json(this.filterResArr(arrOfFilters, finalRes));  
+                    }
+                })
+            }
+        })
+    }
+    printOnePost(res, arrOfData){
+        mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
+            if(err) {
+                res.status(404).json({message: err});
+            }
+            else if(!fieldsUsers[0]) {
+                res.status(404).json({message :"No users in database"});                         
+            }
+            else{
+                mysql.query(`SELECT tittle, categoryID FROM categories`,  (err, fieldsCategories)=>{
+                    if(err) {
+                        res.status(404).json({message: err});
+                    }
+                    else if(!fieldsCategories[0]) {
+                        res.status(404).json({message :"No categories in database"});                         
+                    }
+                    else{
+                        let finalRes = [];
+                        let curAuthor = '';
+                        let categories = [];
+                        for(let j = 0; j < fieldsUsers.length; j++){
+                            if(arrOfData[0].authorID == fieldsUsers[j].userID){
+                                curAuthor = fieldsUsers[j].login;
+                                break;
                             }
                         }
-                    })
-                }
+                        for(let k = 0; k < arrOfData[0].categoryID.arr.length; k++){
+                            for(let j = 0; j < fieldsCategories.length; j++){
+                                if(arrOfData[0].categoryID.arr[k] === fieldsCategories[j].categoryID){
+                                    categories.push(fieldsCategories[j].tittle);
+                                    break;
+                                }
+                            }
+                        }
+                        let currentObj = {
+                            author: curAuthor,
+                            tittle: arrOfData[0].tittle,
+                            content: arrOfData[0].content,
+                            date: arrOfData[0].publishDate,
+                            status: arrOfData[0].status,
+                            rating: arrOfData[0].rating,
+                            categories: categories
+                        }
+                        finalRes.push(currentObj);   
+                        res.status(200).json(finalRes);  
+                    }
+                })
             }
         })
     }
@@ -201,7 +255,7 @@ class Posts extends Model {
                     res.status(404).json({message :"No posts in DB with this ID!"});
                 }
                 else{
-                    this.printOnePost(res, fields, 0, [], []);
+                    this.printOnePost(res, fields);
                 }
             })
         }
@@ -223,7 +277,7 @@ class Posts extends Model {
                                 res.status(404).json({message :"No posts in DB with this ID!"});
                             }
                             else{
-                                this.printOnePost(res, fields, 0, [], []);
+                                this.printOnePost(res, fields);
                             }
                         })
                     }
@@ -238,7 +292,7 @@ class Posts extends Model {
                             }
                             else{
 
-                                this.printOnePost(res, fields, 0, [], []);
+                                this.printOnePost(res, fields);
                             }
                         })
                     }
@@ -265,26 +319,32 @@ class Posts extends Model {
                             res.status(404).json({message :"No comment to this Post"});
                         }
                         else{
-                            let finalRes = [];
-                            for(let i = 0; i < fieldsComments.length; i++){
-                                mysql.query(`SELECT login FROM users WHERE userID=${fieldsComments[i].authorID}`, (err, fieldsUsers)=>{
-                                    if(err) {
-                                        res.status(404).json({message: err});
-                                    }
-                                    else{
-                                        finalRes[i] = {
-                                            author: fieldsUsers[0].login,
+                            mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else{
+                                    let finalRes = [];
+                                    for(let i = 0; i < fieldsComments.length; i++){
+                                        let curAuthor = '';
+                                        for(let j = 0; j < fieldsUsers.length; j++){
+                                            if(fieldsComments[i].authorID == fieldsUsers[j].userID){
+                                                curAuthor = fieldsUsers[j].login;
+                                                break;
+                                            }
+                                        }
+                                        let currentObj = {
                                             post: fieldsPosts[0].tittle,
+                                            authorOfComment: curAuthor,
                                             comment: fieldsComments[i].content,
                                             commentDate:fieldsComments[i].publishDate,
                                             rating: fieldsComments[i].rating
                                         }
-                                        if(i === fieldsComments.length - 1){
-                                            res.status(200).json(finalRes);
-                                        }
+                                        finalRes.push(currentObj);
                                     }
-                                })
-                            }
+                                    res.status(200).json(finalRes);
+                                }
+                            })
                             //res.status(200).json(fieldsComments);
                         }
                     })
@@ -310,6 +370,7 @@ class Posts extends Model {
                                 res.status(404).json({message :"No posts in DB with this ID!"});
                             }
                             else{
+                               
                                 mysql.query(`SELECT * FROM comment WHERE postID=${wantedID} ORDER BY ${sort} DESC`, (err, fieldsComments)=>{
 
                                     if(err) {
@@ -319,27 +380,32 @@ class Posts extends Model {
                                         res.status(404).json({message :"No comment to this Post"});
                                     }
                                     else{
-                                        let finalRes = [];
-                                        for(let i = 0; i < fieldsComments.length; i++){
-                                            mysql.query(`SELECT login FROM users WHERE userID=${fieldsComments[i].authorID}`, (err, fieldsUsers)=>{
-                                                if(err) {
-                                                    res.status(404).json({message: err});
-                                                }
-                                                else{
-                                                    finalRes[i] = {
-                                                        author: fieldsUsers[0].login,
+                                        mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
+                                            if(err) {
+                                                res.status(404).json({message: err});
+                                            }
+                                            else{
+                                                let finalRes = [];
+                                                for(let i = 0; i < fieldsComments.length; i++){
+                                                    let curAuthor = '';
+                                                    for(let j = 0; j < fieldsUsers.length; j++){
+                                                        if(fieldsComments[i].authorID == fieldsUsers[j].userID){
+                                                            curAuthor = fieldsUsers[j].login;
+                                                            break;
+                                                        }
+                                                    }
+                                                    let currentObj = {
                                                         post: fieldsPosts[0].tittle,
+                                                        authorOfComment: curAuthor,
                                                         comment: fieldsComments[i].content,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         rating: fieldsComments[i].rating
                                                     }
-                                                    if(i === fieldsComments.length - 1){
-                                                        res.status(200).json(finalRes);
-                                                    }
+                                                    finalRes.push(currentObj);
                                                 }
-                                            })
-                                        }
-                                        //res.status(200).json(fieldsComments);
+                                                res.status(200).json(finalRes);
+                                            }
+                                        })
                                     }
                                 })
                             }
@@ -364,26 +430,32 @@ class Posts extends Model {
                                         res.status(404).json({message :"No comment to this Post"});
                                     }
                                     else{
-                                        let finalRes = [];
-                                        for(let i = 0; i < fieldsComments.length; i++){
-                                            mysql.query(`SELECT login FROM users WHERE userID=${fieldsComments[i].authorID}`, (err, fieldsUsers)=>{
-                                                if(err) {
-                                                    res.status(404).json({message: err});
-                                                }
-                                                else{
-                                                    finalRes[i] = {
-                                                        author: fieldsUsers[0].login,
+                                        mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
+                                            if(err) {
+                                                res.status(404).json({message: err});
+                                            }
+                                            else{
+                                                let finalRes = [];
+                                                for(let i = 0; i < fieldsComments.length; i++){
+                                                    let curAuthor = '';
+                                                    for(let j = 0; j < fieldsUsers.length; j++){
+                                                        if(fieldsComments[i].authorID == fieldsUsers[j].userID){
+                                                            curAuthor = fieldsUsers[j].login;
+                                                            break;
+                                                        }
+                                                    }
+                                                    let currentObj = {
                                                         post: fieldsPosts[0].tittle,
+                                                        authorOfComment: curAuthor,
                                                         comment: fieldsComments[i].content,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         rating: fieldsComments[i].rating
                                                     }
-                                                    if(i === fieldsComments.length - 1){
-                                                        res.status(200).json(finalRes);
-                                                    }
+                                                    finalRes.push(currentObj);
                                                 }
-                                            })
-                                        }
+                                                res.status(200).json(finalRes);
+                                            }
+                                        })
                                         //res.status(200).json(fieldsComments);
                                     }
                                 })
@@ -413,10 +485,9 @@ class Posts extends Model {
                     }
                 })
             }
-        })
-        
-        
+        })   
     }
+
     findCategoriesToPost(res, wantedID, userID){
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
@@ -434,30 +505,28 @@ class Posts extends Model {
                         else if(!fieldsPosts[0]) {
                             res.status(404).json({message :"No such posts with this 'post_id'"});
                         }
-                        else{
-                            //
-                            let categories = [];
-                            for(let j = 0; j < fieldsPosts[0].categoryID.arr.length; j++){
-                                mysql.query(`SELECT tittle, description FROM categories WHERE categoryID=${fieldsPosts[0].categoryID.arr[j]}`, (err, fieldsCategories)=>{
-                                    if(err) {
-                                        res.status(404).json({message: err});
-                                    }
-                                    else if(!fieldsCategories[0]) {
-                                        res.status(404).json({message :"No such category with this ID"});
-                                        
-                                    }
-                                    else{
-                                        let tempObj = {
-                                            tittle: fieldsCategories[0].tittle,
-                                            description:fieldsCategories[0].description
-                                        }
-                                        categories.push(tempObj);
-                                        if(j === fieldsPosts[0].categoryID.arr.length - 1){
-                                            res.status(200).json({post: fieldsPosts[0].tittle,categoriesToPost: categories});                           
+                        else {
+                            mysql.query(`SELECT tittle, description, categoryID FROM categories`, (err, fieldsCategories)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else{
+                                    let categories = [];
+                                    for(let i = 0; i < fieldsPosts[0].categoryID.arr.length; i++){
+                                        for(let j = 0; j < fieldsCategories.length; j++){
+                                            if(fieldsPosts[0].categoryID.arr[i] === fieldsCategories[j].categoryID){
+                                                let tempObj = {
+                                                    tittle: fieldsCategories[j].tittle,
+                                                    description:fieldsCategories[j].description
+                                                }
+                                                categories.push(tempObj);
+                                                break;
+                                            }
                                         }
                                     }
-                                })
-                            }
+                                    res.status(200).json({post: fieldsPosts[0].tittle,categoriesToPost: categories}); 
+                                }
+                            })
                         }
                     })
                 }
@@ -470,35 +539,34 @@ class Posts extends Model {
                             res.status(404).json({message :"No such active posts with this 'post_id'"});
                         }
                         else{
-                            let categories = [];
-                            for(let j = 0; j < fieldsPosts[0].categoryID.arr.length; j++){
-                                mysql.query(`SELECT tittle, description FROM categories WHERE categoryID=${fieldsPosts[0].categoryID.arr[j]}`, (err, fieldsCategories)=>{
-                                    if(err) {
-                                        res.status(404).json({message: err});
-                                    }
-                                    else if(!fieldsCategories[0]) {
-                                        res.status(404).json({message :"No such category with this ID"});
-                                        
-                                    }
-                                    else{
-                                        let tempObj = {
-                                            tittle: fieldsCategories[0].tittle,
-                                            description:fieldsCategories[0].description
-                                        }
-                                        categories.push(tempObj);
-                                        if(j === fieldsPosts[0].categoryID.arr.length - 1){
-                                            res.status(200).json({post: fieldsPosts[0].tittle,categoriesToPost: categories});                           
+                            mysql.query(`SELECT tittle, description, categoryID FROM categories`, (err, fieldsCategories)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else{
+                                    let categories = [];
+                                    for(let i = 0; i < fieldsPosts[0].categoryID.arr.length; i++){
+                                        for(let j = 0; j < fieldsCategories.length; j++){
+                                            if(fieldsPosts[0].categoryID.arr[i] === fieldsCategories[j].categoryID){
+                                                let tempObj = {
+                                                    tittle: fieldsCategories[j].tittle,
+                                                    description:fieldsCategories[j].description
+                                                }
+                                                categories.push(tempObj);
+                                                break;
+                                            }
                                         }
                                     }
-                                })
-                            }
+                                    res.status(200).json({post: fieldsPosts[0].tittle,categoriesToPost: categories}); 
+                                }
+                            })
                         }
                     })
                 }
             }
         })
     }
-    getLikesOnPost(res, wantedID, userID=-1){
+    getLikesOnPost(res, wantedID, userID = -1){
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
@@ -520,32 +588,36 @@ class Posts extends Model {
                                 else if(!fieldsLikes[0]) {
                                     res.status(404).json({message :"0 likes on this post"});
                                 }
-                                else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsLikes.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsLikes[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    whoLiked: fieldsUser[0].login,
+                                else {
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsLikes.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsLikes[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
+                                                }
+                                                let currentObj = {
+                                                    whoLiked: curAuthor,
                                                     post: fieldsPosts[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
                                                 }
-                                                if( i === fieldsLikes.length - 1){
-                                                    res.status(200).json(finalRes);
-                                                }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                            
+                                        }
+                                    })
                                 }
                             })
                             
@@ -569,31 +641,35 @@ class Posts extends Model {
                                     res.status(404).json({message :"0 likes on this post"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsLikes.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsLikes[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    whoLiked: fieldsUser[0].login,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsLikes.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsLikes[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
+                                                }
+                                                let currentObj = {
+                                                    whoLiked: curAuthor,
                                                     post: fieldsPosts[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
                                                 }
-                                                if( i === fieldsLikes.length - 1){
-                                                    res.status(200).json(finalRes);
-                                                }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                            
+                                        }
+                                    })                                  
                                 }
                             })
                             
@@ -603,42 +679,134 @@ class Posts extends Model {
             }
         })
     }
+
+    //ТИМЧАСОВА ЗУПИНКА
     createNewPost(res, userID, tittle, content, categories){
-        let isErr = false;
-        let arrOfCategories = [];
-        for(let i = 0; i < categories.length; i++){
-            mysql.query(`SELECT tittle, categoryID FROM categories WHERE tittle='${categories[i]}'`,(err, fields)=>{
-                if(err) {
-                    if(!isErr){
-                        res.status(404).json({message: err});
-                    }
-                }
-                else if(!fields[0]){
-                    if(!isErr){
-                        isErr = true;
-                        res.status(200).json("Non such category - '" + categories[i] + "'");
-                    }
-                }
-                else{
-                    if(!isErr){
-                        arrOfCategories.push(fields[0].categoryID);
-                        if(i === categories.length - 1){
-                            let arrToAdd = JSON.stringify({arr: arrOfCategories});
-                            mysql.query(`INSERT INTO posts(authorID, categoryID, tittle, content) 
-                            VALUES(${userID}, '${arrToAdd}', '${tittle}', '${content}')`,(err, fieldsAding)=>{
-                                if(err){
-                                    res.status(404).json({message: err});
-                                }
-                                else{
-                                    res.status(200).json("Post succesfully created");
-                                }
-                            })
-                            
+        mysql.query(`SELECT tittle, categoryID FROM categories ORDER BY categoryID`,(err, fields)=>{
+            if(err) {
+                res.status(404).json({message: err});
+            }
+            else if(!fields[0]){
+                res.status(404).json("No categories in database");
+            }
+            else{
+                let arrCategories = [];
+                let isErr = true;
+                for(let j = 0; j < categories.length; j++){
+                    isErr = true;
+                    for(let i = 0; i < fields.length; i++){
+                        if(fields[i].tittle === categories[j]) {
+                            arrCategories.push(fields[i].categoryID);
+                            isErr = false;
+                            break;
                         }
                     }
+                    if(isErr){
+                        break;
+                    }
                 }
-            })
-        }  
+                if(!isErr){
+                    arrCategories.sort((a, b)=>{
+                        if(a > b){
+                            return 1;
+                        } 
+                        else{
+                            return -1;
+                        }
+                    });
+                    mysql.query(`INSERT INTO posts(authorID, categoryID, tittle, content) 
+                    VALUES(${userID}, '${JSON.stringify({arr: arrCategories})}', '${tittle}', '${content}')`,(err, fieldsAding)=>{
+                        if(err){
+                            res.status(404).json({message: err});
+                        }
+                        else{
+                            res.status(200).json("Post succesfully created");
+                        }
+                    })
+                }
+                else{
+                    res.status(200).json("No such categories. Input categories in style: JavaScript, HTML, Python");
+                }
+            }
+        })
+    }
+    updatePost(res, userID, wantedID, tittle, content, categories){    
+        mysql.query(`SELECT * FROM posts WHERE authorID=${userID} AND postID=${wantedID}`, (err, result) => {
+            if(err) {
+                res.status(404).json({message: err});
+            }
+            else if(!result[0]) {
+                res.status(404).json({message :"You don`t create posts with this ID!"});
+            }
+            else{
+                if(categories){
+                    mysql.query(`SELECT tittle, categoryID FROM categories ORDER BY categoryID`,(err, fields)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(!fields[0]){
+                            res.status(404).json("No categories in database");
+                        }
+                        else{
+                            let arrCategories = [];
+                            let isErr = true;
+                            for(let j = 0; j < categories.length; j++){
+                                isErr = true;
+                                for(let i = 0; i < fields.length; i++){
+                                    if(fields[i].tittle === categories[j]) {
+                                        arrCategories.push(fields[i].categoryID);
+                                        isErr = false;
+                                        break;
+                                    }
+                                }
+                                if(isErr){
+                                    break;
+                                }
+                            }
+                            if(!isErr){
+                                arrCategories.sort((a, b)=>{
+                                    if(a > b){
+                                        return 1;
+                                    } 
+                                    else{
+                                        return -1;
+                                    }
+                                });
+                                mysql.query(`UPDATE posts SET 
+                                    tittle='${tittle || result[0].tittle}', 
+                                    categoryID='${JSON.stringify({arr: arrCategories})}', 
+                                    content='${content||result[0].content}' 
+                                    WHERE postID=${wantedID}`,(err, fieldsAding)=>{
+                                    if(err){
+                                        res.status(404).json({message: err});
+                                    }
+                                    else{
+                                        res.status(200).json("Post succesfully updated");
+                                    }
+                                })
+                            }
+                            else{
+                                res.status(200).json("No such categories. Input categories in style: JavaScript, HTML, Python");
+                            }
+                        }
+                    })
+                }
+                else{
+                    mysql.query(`UPDATE posts SET 
+                    tittle='${tittle || result[0].tittle}', 
+                    categoryID='${JSON.stringify(result[0].categoryID)}', 
+                    content='${content||result[0].content}' 
+                    WHERE postID=${wantedID}`,(err, fieldsAding)=>{
+                        if(err){
+                            res.status(404).json({message: err});
+                        }
+                        else{
+                            res.status(200).json("Post succesfully updated");
+                        }
+                    })
+                }
+            }
+        })
     }
     createNewLikeUnderPost(res, userID, wantedID, type){
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
@@ -787,72 +955,6 @@ class Posts extends Model {
                                     })
                                 }
                             })
-                        }
-                    })
-                }
-            }
-        })
-    }
-    updatePost(res, userID, wantedID, tittle, content, categories){    
-        mysql.query(`SELECT * FROM posts WHERE authorID=${userID} AND postID=${wantedID}`, (err, result) => {
-            if(err) {
-                res.status(404).json({message: err});
-            }
-            else if(!result[0]) {
-                res.status(404).json({message :"You don`t create posts with this ID!"});
-            }
-            else{
-                let isErr = false;
-                let arrOfCategories = [];
-                if(categories){
-                    for(let i = 0; i < categories.length; i++){
-                        mysql.query(`SELECT tittle, categoryID FROM categories WHERE tittle='${categories[i]}'`,(err, fields)=>{
-                            if(err) {
-                                if(!isErr){
-                                    res.status(404).json({message: err});
-                                }
-                            }
-                            else if(!fields[0]){
-                                if(!isErr){
-                                    isErr = true;
-                                    res.status(200).json("No such category - '" + categories[i] + "'");
-                                }
-                            }
-                            else{
-                                if(!isErr){
-                                    arrOfCategories.push(fields[0].categoryID);
-                                    if(i === categories.length - 1){
-                                        let arrToAdd = JSON.stringify({arr: arrOfCategories});
-                                        mysql.query(`UPDATE posts SET 
-                                            tittle='${tittle|| result[0].tittle}', 
-                                            categoryID='${arrToAdd}', 
-                                            content='${content||result[0].content}' 
-                                            WHERE postID=${wantedID}`,(err, fieldsAding)=>{
-                                            if(err){
-                                                res.status(404).json({message: err});
-                                            }
-                                            else{
-                                                res.status(200).json("Post succesfully created");
-                                            }
-                                        })
-                                        
-                                    }
-                                }
-                            }
-                        })
-                    }  
-                }
-                else{
-                    mysql.query(`UPDATE posts SET 
-                        tittle='${tittle|| result[0].tittle}', 
-                        categoryID='${JSON.stringify(result[0].categoryID)}', 
-                        content='${content||result[0].content}' 
-                        WHERE postID=${wantedID}`,(err, fieldsAding)=>{
-                        if(err){
-                            res.status(404).json({message: err});
-                        }
-                        else{
-                            res.status(200).json("Post succesfully updated");
                         }
                     })
                 }
@@ -1115,29 +1217,32 @@ class Posts extends Model {
                                     res.status(404).json({message :"0 favourites on this post"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsFavourites.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsFavourites[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsFavourites[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    authorLogin: fieldsUser[0].login,
-                                                    post: fieldsPosts[0].tittle,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsFavourites.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsFavourites[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
                                                 }
-                                                if( i === fieldsFavourites.length - 1){
-                                                    res.status(200).json(finalRes);
+                                                let currentObj = {
+                                                    whoAddToFavorite: curAuthor,
+                                                    post: fieldsPosts[0].tittle
                                                 }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                        }
+                                    })
                                 }
                             })
                             
@@ -1161,28 +1266,32 @@ class Posts extends Model {
                                     res.status(404).json({message :"0 favourites on this post"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsFavourites.length; i++){
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsFavourites[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsFavourites[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    authorLogin: fieldsUser[0].login,
-                                                    post: fieldsPosts[0].tittle,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsFavourites.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsFavourites[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
                                                 }
-                                                if( i === fieldsFavourites.length - 1){
-                                                    res.status(200).json(finalRes);
+                                                let currentObj = {
+                                                    whoAddToFavorite: curAuthor,
+                                                    post: fieldsPosts[0].tittle
                                                 }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                        }
+                                    })
                                 }
                             })
                             
@@ -1313,29 +1422,32 @@ class Posts extends Model {
                                     res.status(404).json({message :"0 subcribes to this post"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsSubscribes.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsSubscribes[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsSubscribes[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    authorLogin: fieldsUser[0].login,
-                                                    post: fieldsPosts[0].tittle,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsSubscribes.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsSubscribes[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
                                                 }
-                                                if( i === fieldsSubscribes.length - 1){
-                                                    res.status(200).json(finalRes);
+                                                let currentObj = {
+                                                    whoSubscribed: curAuthor,
+                                                    post: fieldsPosts[0].tittle
                                                 }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                        }
+                                    })                                    
                                 }
                             })
                             
@@ -1348,7 +1460,6 @@ class Posts extends Model {
                             res.status(404).json({message: err});
                         }
                         else if(!fieldsPosts[0]) {
-                            console.log(fieldsPosts)
                             res.status(404).json({message :"No such active posts with this 'post_id'"});
                         }
                         else{
@@ -1360,30 +1471,34 @@ class Posts extends Model {
                                     res.status(404).json({message :"0 subcribes to this post"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsSubscribes.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsSubscribes[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsSubscribes[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    authorLogin: fieldsUser[0].login,
-                                                    post: fieldsPosts[0].tittle,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsSubscribes.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsSubscribes[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
                                                 }
-                                                if( i === fieldsSubscribes.length - 1){
-                                                    res.status(200).json(finalRes);
+                                                let currentObj = {
+                                                    whoSubscribed: curAuthor,
+                                                    post: fieldsPosts[0].tittle
                                                 }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                        }
+                                    })
                                 }
+                                   
                             })
                             
                         }

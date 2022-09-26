@@ -89,31 +89,35 @@ class Comments extends Model {
                                     res.status(404).json({message :"0 likes on this comment"});
                                 }
                                 else{
-                                    let finalRes = [];
-                                    for(let i = 0; i < fieldsLikes.length; i++){
-                                        //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                        mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`, (err, fieldsUser)=>{
-                                            if(err) {
-                                                res.status(404).json({message: err});
-                                            }
-                                            else if(!fieldsLikes[0]) {
-                                                res.status(404).json({message :"No such user"});
-                                            }
-                                            else{
-                                                finalRes[i] = {
-                                                    whoLiked: fieldsUser[0].login,
-                                                    comment: fieldsComments[0].content,
+                                    mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsUser[0]) {
+                                            res.status(404).json({message :"No users in database"});
+                                        }
+                                        else{
+                                            let finalRes = [];
+                                            for(let i = 0; i < fieldsLikes.length; i++){ 
+                                                let curAuthor = '';     
+                                                for(let j = 0; j < fieldsUser.length; j++){
+                                                    if(fieldsLikes[i].authorID == fieldsUser[j].userID){
+                                                        curAuthor = fieldsUser[j].login;
+                                                        break;
+                                                    }
+                                                }
+                                                let currentObj = {
+                                                    whoLiked: curAuthor,
+                                                    comment: fieldsComments[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
                                                 }
-                                                if( i === fieldsLikes.length - 1){
-                                                    res.status(200).json(finalRes);
-                                                }
+                                                finalRes.push(currentObj);
                                             }
-                                        });
-
-                                    }
-                                    
+                                            res.status(200).json(finalRes);
+                                            
+                                        }
+                                    })
                                 }
                             })
                             
@@ -144,33 +148,36 @@ class Comments extends Model {
                                         else if(!fieldsLikes[0]) {
                                             res.status(404).json({message :"0 likes on this comment"});
                                         }
-                                        else{
-                                            let finalRes = [];
-                                            for(let i = 0; i < fieldsLikes.length; i++){
-                                                //console.log(mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`));
-                                                mysql.query(`SELECT login FROM users WHERE userID=${fieldsLikes[i].authorID}`, (err, fieldsUser)=>{
-                                                    if(err) {
-                                                        res.status(404).json({message: err});
-                                                    }
-                                                    else if(!fieldsLikes[0]) {
-                                                        res.status(404).json({message :"No such user"});
-                                                    }
-                                                    else{
-                                                        finalRes[i] = {
-                                                            whoLiked: fieldsUser[0].login,
-                                                            post: fieldsPost[0].post,
-                                                            comment: fieldsComments[0].content,
+                                        else{                                           
+                                            mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
+                                                if(err) {
+                                                    res.status(404).json({message: err});
+                                                }
+                                                else if(!fieldsUser[0]) {
+                                                    res.status(404).json({message :"No users in database"});
+                                                }
+                                                else{
+                                                    let finalRes = [];
+                                                    for(let i = 0; i < fieldsLikes.length; i++){ 
+                                                        let curAuthor = '';     
+                                                        for(let j = 0; j < fieldsUser.length; j++){
+                                                            if(fieldsLikes[i].authorID == fieldsUser[j].userID){
+                                                                curAuthor = fieldsUser[j].login;
+                                                                break;
+                                                            }
+                                                        }
+                                                        let currentObj = {
+                                                            whoLiked: curAuthor,
+                                                            comment: fieldsComments[0].tittle,
                                                             date: fieldsLikes[i].publishDate,
                                                             type: fieldsLikes[i].type
                                                         }
-                                                        if( i === fieldsLikes.length - 1){
-                                                            res.status(200).json(finalRes);
-                                                        }
+                                                        finalRes.push(currentObj);
                                                     }
-                                                });
-
-                                            }
-                                            
+                                                    res.status(200).json(finalRes);
+                                                    
+                                                }
+                                            })
                                         }
                                     })
                                 }
