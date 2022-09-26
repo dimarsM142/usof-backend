@@ -197,13 +197,13 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                 <td>Post deleted</td>
             </tr>
             <tr>
-                <td>Show categories on Post</td>
+                <td>Show categories on post</td>
                 <td><code>GET - /api/posts/:post_id/categories</code></td>
                 <td>access token</td>
                 <td>All categories of this post(json)</td>
             </tr>
             <tr>
-                <td>Show comments on Post</td>
+                <td>Show comments on post</td>
                 <td><code>GET - /api/posts/:post_id/comments</code></td>
                 <td></td>
                  <td>All comments of this post(json)</td>
@@ -260,7 +260,7 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                 <td>Add post to subscribes</td>
                 <td><code>POST - /api/posts/:post_id:/subscribe</code></td>
                 <td>access token</td>
-                <td>subscribed to new post</td>
+                <td>Subscribed to new post</td>
             </tr>
             <tr>
                 <td>Delete post from subscribes</td>
@@ -278,22 +278,44 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
+                    <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
-                <td>Show all categories (tags)</td>
+                <td>Show all categories</td>
                 <td><code>GET - /api/categories</code></td>
                 <td></td>
+                <td>All categories(json)</td>
             </tr>
             <tr>
-                <td>Show specific category (tag)</td>
-                <td><code>GET - /api/categories/{category_id}</code></td>
-                <td>category_id</td>
+                <td>Show specific category</td>
+                <td><code>GET - /api/categories/:category_id</code></td>
+                <td></td>
+                <td>Specififc category(json)</td>
             </tr>
             <tr>
                 <td>Show all posts associated with category</td>
-                <td><code>GET - /api/categories/{category_id}/posts</code></td>
-                <td>category_id</td>
+                <td><code>GET - /api/categories/:category_id/posts</code></td>
+                <td></td>
+                <td>All posts of some category(json)</td>
+            </tr>
+            <tr>
+                <td>Create new category</td>
+                <td><code>POST - /api/categories</code></td>
+                <td>access token(admin only), json data ->{tittle, description}</td>
+                <td>New category created</td>
+            </tr>
+            <tr>
+                <td>Update specific category</td>
+                <td><code>PATCH - /api/categories/:category_id</code></td>
+                <td>access token(admin only), json data ->{tittle, description}</td>
+                <td>Specific category created</td>
+            </tr>
+             <tr>
+                <td>Delete specific category</td>
+                <td><code>DELETE - /api/categories/:category_id</code></td>
+                <td>access token(admin only)</td>
+                <td>Specific category deleted</td>
             </tr>
         </table>
     </p>
@@ -305,37 +327,50 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
+                     <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
+                <td>Show specific comment</td>
+                <td><code>GET - /api/comments/:comment_id</code></td>
+                <td></td>
+                <td>All comments(json)</td>
+            </tr>
+            <tr>
                 <td>Update comment</td>
-                <td><code>PATCH - /api/comments/{comment_id}</code></td>
-                <td>token, comment_id</td>
+                <td><code>PATCH - /api/comments/:comment_id</code></td>
+                <td>access token, json data ->{content}</td>
+                <td>Comment updated</td>
+            </tr>
+             <tr>
+                <td>Update locking comment</td>
+                <td><code>PATCH - /api/comments/:comment_id/locking</code></td>
+                <td>access token</td>
+                <td>Locking comment updated</td>
             </tr>
             <tr>
                 <td>Delete comment</td>
                 <td><code>DELETE - /api/comments/{comment_id}</code></td>
-                <td>token, comment_id</td>
+                <td>access token</td>
+                <td>Comment deleted</td>
             </tr>
             <tr>
-                <td>Show all likes on comment</td>
-                <td><code>GET - /api/comments/{comment_id}/like</code></td>
-                <td>comment_id</td>
+                <td>Show all likes/dislikes on comment</td>
+                <td><code>GET - /api/comments/:comment_id/like</code></td>
+                <td></td>
+                <td>All likes/dislikes of this post(json)</td>
             </tr>
             <tr>
-                <td>Create or delete like on comment</td>
-                <td><code>POST - /api/comments/{comment_id}/like</code></td>
-                <td>token, comment_id, json data</td>
+                <td>Create like/dislike on comment</td>
+                <td><code>POST - /api/comments/:comment_id/like</code></td>
+                <td>access token, json data->{type}</td>
+                <td>One like/dislike created</td>
             </tr>
             <tr>
-                <td>Delete like on comment</td>
-                <td><code>DELETE - /api/comments/{comment_id}/like</code></td>
-                <td>token, comment_id, json data</td>
-            </tr>
-            <tr>
-                <td>Mark or unmark comment as best on post</td>
-                <td><code>GET - /api/comments/{comment_id}/best</code></td>
-                <td>token, comment_id</td>
+                <td>Delete like/dislike on comment</td>
+                <td><code>DELETE - /api/comments/:comment_id/like</code></td>
+                <td>access token</td>
+                 <td>One like/dislike deleted</td>
             </tr>
         </table>
     </p>
@@ -345,40 +380,28 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
         <table width="100%">
             <thead>
                 <tr>
-                    <td><b>Applied filters</b></td>
+                    <td><b>filters or sort type</b></td>
                     <td><b>Description</b></td>
                 </tr>
                 <tr>
-                    <td>?search={string}</td>
-                    <td>Search for posts that contains {string} in their title or content. {string} can be a word or even a letter.</td>
+                    <td>?category=category_name</td>
+                    <td>Search for posts that was contains categories. Example: `Python,NodeJS,ReactJS`</td>
                 </tr>
                 <tr>
-                    <td>?user={username}</td>
-                    <td>Search for posts that was created by {username}.</td>
+                    <td>?status=status_type</td>
+                    <td>Search for posts that was has status 'active' or 'inactive'</td>
                 </tr>
                 <tr>
-                    <td>?category={string}</td>
-                    <td>Search for posts that was contains {string} categories. {string} can look like `HTML,JavaScript,React`</td>
+                    <td>?startDate=DD-MM-YYYY</td>
+                    <td>Search for posts that was was created after date</td>
                 </tr>
                 <tr>
-                    <td>?status={integer}</td>
-                    <td>Search for posts that was has status true or false. {integer} can be 0 or 1</td>
+                    <td>?endDate=DD-MM-YYYY</td>
+                    <td>Search for posts that was was created before date.</td>
                 </tr>
                 <tr>
-                    <td>?startDate={date}</td>
-                    <td>Search for posts that was was created after {date}. Can be combined with endDate to create a date interval.</td>
-                </tr>
-                <tr>
-                    <td>?endDate={int}</td>
-                    <td>Search for posts that was was created before {date}. Can be combined with startDate to create a date interval.</td>
-                </tr>
-                <tr>
-                    <td>?order={string}</td>
-                    <td>Get posts ordered by {string}. {string} should look like: date$desc, date$asc, rating$asc, rating$desc</td>
-                </tr>
-                <tr>
-                    <td>?page={integer}</td>
-                    <td>Search for posts that are displayed on {integer} page. Each page contains 10 posts.</td>
+                    <td>?sort={sort_type}</td>
+                    <td>Get posts ordered by 'date' or 'rating'.</td>
                 </tr>
             </thead>
         </table>
