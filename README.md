@@ -53,7 +53,7 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
             <tr>
                 <td>Log out</td>
                 <td><code>POST - /api/auth/logout</code></td>
-                <td>token</td>
+                <td>access token</td>
                 <td>json data -> {accessToken:"", refreshToken:""}</td>
             </tr>
             <tr>
@@ -85,7 +85,7 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                 <td>Show all users</td>
                 <td><code>GET - /api/users</code></td>
                 <td>access token(admin only)</td>
-                <td>Info about all users</td>
+                <td>Info about all users(json)</td>
             </tr>
             <tr>
                 <td>Show specified user</td>
@@ -118,28 +118,28 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                 <td>Avatar updated</td>
             </tr>
             <tr>
-                <td>Update your post</td>
+                <td>Update your account</td>
                 <td><code>PATCH - /api/me/users</code></td>
                 <td>access token,  json data -> {login, email, fullName}</td>
-                <td>Your avatar updated</td>
+                <td>Your account updated</td>
             </tr>
               <tr>
-                <td>Update post</td>
+                <td>Update account</td>
                 <td><code>PATCH - /api/users/:id</code></td>
                 <td>access token(admin only),  json data -> {login, email, fullName, role}</td>
-                <td>Post updated</td>
+                <td>Account updated</td>
             </tr>
             <tr>
-                <td>Delete your post</td>
+                <td>Delete your account</td>
                 <td><code>DELETE - /api/me/users</code></td>
                 <td>access token</td>
-                <td>Your avatar deleted</td>
+                <td>Your account deleted</td>
             </tr>
               <tr>
-                <td>Delete post</td>
+                <td>Delete account</td>
                 <td><code>DELETE - /api/users/:id</code></td>
                 <td>access token(admin only)</td>
-                <td>Post deleteed</td>
+                <td>Account deleted</td>
             </tr>
         </table>
     </p>
@@ -151,82 +151,122 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
                     <td><b>Action</b></td>
                     <td><b>Request</b></td>
                     <td><b>Requirements</b></td>
+                    <td><b>Expected result</b></td>
                 </tr>
             </thead>
             <tr>
                 <td>Show all posts</td>
                 <td><code>GET - /api/posts</code></td>
                 <td></td>
+                <td>All posts(json)</td>
             </tr>
             <tr>
                 <td>Show specific post</td>
-                <td><code>GET - /api/posts/{post_id}</code></td>
+                <td><code>GET - /api/posts/:post_id</code></td>
                 <td>post_id</td>
+                <td>Specific post(json)</td>
             </tr>
             <tr>
                 <td>Create post</td>
                 <td><code>POST - /api/posts</code></td>
-                <td>json data</td>
+                <td>access token, json data -> {tittle, content, categories}</td>
+                <td>New post created</td>
             </tr>
             <tr>
                 <td>Update post</td>
-                <td><code>PATCH - /api/posts/{post_id}</code></td>
-                <td>token, json data</td>
+                <td><code>PATCH - /api/posts/:post_id</code></td>
+                  <td>access token, json data -> {tittle, content, categories}</td>
+                  <td>Post updated</td>
+            </tr>
+            <tr>
+                <td>Update status</td>
+                <td><code>PATCH - /api/posts/:post_id/status</code></td>
+                  <td>access token</td>
+                  <td>Status changed</td>
+            </tr>
+            <tr>
+                <td>Update locking</td>
+                <td><code>PATCH - /api/posts/:post_id/locking</code></td>
+                  <td>access token(admin only)</td>
+                  <td>Locking changed</td>
             </tr>
             <tr>
                 <td>Delete post</td>
-                <td><code>DELETE - /api/posts/{post_id}</code></td>
-                <td>token</td>
+                <td><code>DELETE - /api/posts/:post_id</code></td>
+                <td>access token</td>
+                <td>Post deleted</td>
             </tr>
             <tr>
-                <td>Show Categories on Post</td>
-                <td><code>GET - /api/posts/{post_id}/categories</code></td>
-                <td>post_id</td>
+                <td>Show categories on Post</td>
+                <td><code>GET - /api/posts/:post_id/categories</code></td>
+                <td>access token</td>
+                <td>All categories of this post(json)</td>
             </tr>
             <tr>
-                <td>Show Comments on Post</td>
-                <td><code>GET - /api/posts/{post_id}/comments</code></td>
-                <td>post_id</td>
+                <td>Show comments on Post</td>
+                <td><code>GET - /api/posts/:post_id/comments</code></td>
+                <td></td>
+                 <td>All comments of this post(json)</td>
             </tr>
             <tr>
                 <td>Create comment on post</td>
-                <td><code>POST - /api/posts/{post_id}/comments</code></td>
-                <td>token, post_id, json data</td>
+                <td><code>POST - /api/posts/:post_id/comments</code></td>
+                <td>access token, json data ->{content}</td>
+                <td>New comment created</td>
             </tr>
             <tr>
                 <td>Show likes/dislikes on post</td>
-                <td><code>GET - /api/posts/{post_id}/like</code></td>
-                <td>post_id</td>
+                <td><code>GET - /api/posts/:post_id/like</code></td>
+                <td></td>
+                <td>All likes of this post(json)</td>
             </tr>
             <tr>
-                <td>Create or delete like/dislike on Post</td>
-                <td><code>POST - /api/posts/{post_id}/like</code></td>
-                <td>token, post_id, json data</td>
+                <td>Create like/dislike on post</td>
+                <td><code>POST - /api/posts/:post_id/like</code></td>
+                <td>access token, json data -> {type}</td>
+                <td>New like/dislike created</td>
             </tr>
             <tr>
                 <td>Delete like on post</td>
-                <td><code>DELETE - /api/posts/{post_id}/like</code></td>
-                <td>token, post_id, json data</td>
+                <td><code>DELETE - /api/posts/:post_id/like</code></td>
+                <td>access token</td>
+                <td>Like/dislike deleted</td>
+            </tr>
+             <tr>
+                <td>Show favourites of post</td>
+                <td><code>GET - /api/posts/:post_id/favourite</code></td>
+                <td>access token</td>
+                <td>All favourites of this post(json)</td>
             </tr>
             <tr>
-                <td>Add or delete post from favorites</td>
-                <td><code>POST - /api/posts/{post_id}/favorite</code></td>
-                <td>token, post_id</td>
+                <td>Add post to favourites</td>
+                <td><code>POST - /api/posts/:post_id:/favourite</code></td>
+                <td>access token</td>
+                <td>New post added to favourite</td>
             </tr>
             <tr>
-                <td>Delete post from favorites</td>
-                <td><code>DELETE - /api/posts/{post_id}/favorite</code></td>
-                <td>token, post_id</td>
+                <td>Delete post from favourites</td>
+                <td><code>DELETE - /api/posts/:post_id/favourite</code></td>
+                <td>access token</td>
+                <td>Post added deleted from favourites</td>
+            </tr>
+             <tr>
+                <td>Show subscribes of post</td>
+                <td><code>GET - /api/posts/:post_id/subscribe</code></td>
+                <td>access token</td>
+                <td>All subscribes of this post(json)</td>
             </tr>
             <tr>
-                <td>Subscribe or unsubscribe to post updates</td>
-                <td><code>POST - /api/posts/{post_id}/subscribe</code></td>
-                <td>token, post_id</td>
+                <td>Add post to subscribes</td>
+                <td><code>POST - /api/posts/:post_id:/subscribe</code></td>
+                <td>access token</td>
+                <td>subscribed to new post</td>
             </tr>
             <tr>
-                <td>Unsubscribe from post updates</td>
-                <td><code>DELETE - /api/posts/{post_id}/subscribe</code></td>
-                <td>token, post_id</td>
+                <td>Delete post from subscribes</td>
+                <td><code>DELETE - /api/posts/:post_id/subscribe</code></td>
+                <td>access token</td>
+                <td>Post unsubscribed</td>
             </tr>
         </table>
     </p>
@@ -299,8 +339,8 @@ To check this API, use the Insomnia or Postman sites. They can be used to easily
             </tr>
         </table>
     </p>
-    <h3>Also it's possible to sort and filter different requests:</h3>
-    <p><b>Posts module</b>
+    <h3>Sorting and filtering. When your request is <code>api/posts</code> you can use these parametrs:</h3>
+    <p>
         <br>
         <table width="100%">
             <thead>
