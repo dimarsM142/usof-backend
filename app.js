@@ -16,8 +16,8 @@ const corsOptions ={
     methods:["GET" , "POST" , "PUT", "DELETE"],
     optionSuccessStatus:200
 }
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({extended: true}));
