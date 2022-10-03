@@ -42,16 +42,22 @@ const getPosts = (req, res) => {
             res.status(404).json({message: "Input 'endDate' which bigger than 'startDate'"})
         }
     }
+    if(!isErr && req.query.page &&(!Number.isInteger(+req.query.page) ||+req.query.page <= 0)){
+        res.status(404).json({message: "This page is not natural number"});
+        
+        isErr = true;
+        
+    }
     if(!isErr){
         const accessToken = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : ' ';
         let token = new Token();
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();
         if(decodedToken.isErr){
-            posts.findAllPosts(res, sort, req.query);
+            posts.findAllPosts(res, sort, req.query, +req.query.page || 1);
         }
         else{
-            posts.findAllPosts(res, sort, req.query, decodedToken.result.userID);
+            posts.findAllPosts(res, sort, req.query, +req.query.page || 1, decodedToken.result.userID);
         }
     }
 }

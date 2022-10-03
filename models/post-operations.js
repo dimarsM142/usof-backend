@@ -5,9 +5,20 @@ class Posts extends Model {
     constructor(){
         super();   
     }
-    filterResArr(arrOfFilters, finalRes){
+    filterResArr(arrOfFilters, finalRes, page){
+        
         if(!arrOfFilters || (!arrOfFilters.category && !arrOfFilters.status && !arrOfFilters.startDate && !arrOfFilters.endDate)){
-            return finalRes;
+            if(((page - 1) * 10) > finalRes.length){
+                return {message: "There are no posts on this page"};
+            }
+            let resArr = [];
+            for(let i = (page - 1) * 10; i < (page - 1) * 10 + 10; i++){
+                if(i === finalRes.length){
+                    break;
+                }
+                resArr.push(finalRes[i]);
+            }
+            return resArr;
         }
         else{
             if(arrOfFilters.category){
@@ -80,15 +91,24 @@ class Posts extends Model {
                 return {message: "There are no posts matching these filters"};
             }
             else{
-                return finalRes;
+                if(((page - 1) * 10) > finalRes.length){
+                    return {message: "There are no posts on this page"};
+                }
+                let resArr = [];
+                for(let i = (page - 1) * 10; i < (page - 1) * 10 + 10; i++){
+                    if(i === finalRes.length){
+                        break;
+                    }
+                    resArr.push(finalRes[i]);
+                }
+                return resArr;
             }
             
         }
         
 
     }
-    printAllPosts(res, arrOfData, arrOfFilters){
-       
+    printAllPosts(res, arrOfData, arrOfFilters, page){
         mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
             if(err) {
                 res.status(404).json({message: err});
@@ -135,7 +155,7 @@ class Posts extends Model {
                             finalRes.push(currentObj);
                         }
                         
-                        res.status(200).json(this.filterResArr(arrOfFilters, finalRes));  
+                        res.status(200).json(this.filterResArr(arrOfFilters, finalRes, page));  
                     }
                 })
             }
@@ -191,7 +211,7 @@ class Posts extends Model {
             }
         })
     }
-    findAllPosts(res, sort,  arrOfFilters ,userID = -1){
+    findAllPosts(res, sort,  arrOfFilters, page, userID = -1){
         sort = (sort === 'date' ? 'publishDate' : 'rating');
         if(userID === -1){
             mysql.query(`SELECT * FROM posts WHERE status='active' AND locking='unlocked' ORDER BY ${sort} DESC`, (err, fields) => {
@@ -202,7 +222,7 @@ class Posts extends Model {
                     res.status(404).json({message :"No posts in DB!"});
                 }
                 else{
-                    this.printAllPosts(res, fields, arrOfFilters);
+                    this.printAllPosts(res, fields, arrOfFilters, page);
                 }
             })
         }
@@ -224,7 +244,7 @@ class Posts extends Model {
                                 res.status(404).json({message :"No posts in DB!"});
                             }
                             else{
-                                this.printAllPosts(res, fields, arrOfFilters);
+                                this.printAllPosts(res, fields, arrOfFilters, page);
                             }
                         })
                     }
@@ -237,7 +257,7 @@ class Posts extends Model {
                                 res.status(404).json({message :"No posts in DB!"});
                             }
                             else{
-                                this.printAllPosts(res, fields, arrOfFilters);
+                                this.printAllPosts(res, fields, arrOfFilters, page);
                             }
                         })
                     }
