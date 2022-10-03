@@ -12,6 +12,9 @@ let transporter = nodemailer.createTransport({
 });
 
 const postRegister = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {login, password, passwordConfirmation, fullName, email} = req.body;
     if(!login || !password || !passwordConfirmation || !fullName || !email){
         res.status(404).json({message: "Check fields to input"});
@@ -43,6 +46,9 @@ const postRegister = (req, res) => {
 
 
 const postLogin = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     let loginDB = new UsersLogin();
     const {login, password} = req.body;
     if(!login || !password){
@@ -55,6 +61,9 @@ const postLogin = (req, res) => {
 }
 
 const getRefresh = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {refreshToken} = req.body;
     if(!refreshToken){
         res.status(400).json({message: "Token not found"});
@@ -66,6 +75,9 @@ const getRefresh = (req, res) => {
 }
 
 const postLogout = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const AccessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
     token.findByIDAndDelete(res, AccessToken);
@@ -74,6 +86,9 @@ const postLogout = (req, res) => {
 
 
 const postSendPassword = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {email} = req.body;
     if(!email){
         res.status(404).json({message: "Check fields to input"});
@@ -85,6 +100,9 @@ const postSendPassword = (req, res) => {
 }
 
 const postResetPassword = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {password} = req.body;
     if(!password){
         res.status(404).json({message: "Check fields to input"});

@@ -2,6 +2,9 @@ const Comments = require('../models/comments-operations.js');
 const Token = require('../models/token.js');
 
 const getCommentByID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.comment_id) || +req.params.comment_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -21,6 +24,9 @@ const getCommentByID = (req, res) => {
 }
 
 const getLikeByCommentID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.comment_id) || +req.params.comment_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -40,6 +46,9 @@ const getLikeByCommentID = (req, res) => {
 }
 
 const postLikeByCommentID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {type} = req.body;
     if(type !=='like' && type !=='dislike'){
         res.status(404).json({message:"Input 'type' of like - 'like' or 'dislike':"});
@@ -64,6 +73,9 @@ const postLikeByCommentID = (req, res) => {
 }
 
 const patchCommentByID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {content} = req.body;
 
     if(!Number.isInteger(+req.params.comment_id) || +req.params.commment_id <= 0){
@@ -87,6 +99,9 @@ const patchCommentByID = (req, res) => {
 }
 
 const patchLocking = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.comment_id) || +req.params.commment_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -108,6 +123,9 @@ const patchLocking = (req, res) => {
 
 
 const deleteCommentByID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.comment_id) || +req.params.comment_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -127,6 +145,9 @@ const deleteCommentByID = (req, res) => {
 }
 
 const deleteLikeByCommentID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.comment_id) || +req.params.comment_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }

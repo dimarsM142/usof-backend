@@ -79,6 +79,9 @@ const getPostByID = (req, res) => {
 }
 
 const getPostByIDComments = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }

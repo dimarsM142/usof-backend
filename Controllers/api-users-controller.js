@@ -11,6 +11,9 @@ let transporter = nodemailer.createTransport({
 });
 
 const getUsers = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
 
@@ -26,6 +29,9 @@ const getUsers = (req, res) => {
 }
 
 const  getUserID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.id) || +req.params.id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -44,6 +50,9 @@ const  getUserID = (req, res) => {
 }
 
 const  getUserMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
     const decodedToken = token.decodeToken(accessToken);
@@ -57,6 +66,9 @@ const  getUserMe = (req, res) => {
 }
 
 const postUsers = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {login, password, passwordConfirmation, fullName, email, role} = req.body;
     if(!login || !password || !passwordConfirmation || !fullName || !email || !role){
         res.status(404).json({message: "Check fields to input"});
@@ -97,6 +109,9 @@ const postUsers = (req, res) => {
 }
 
 const  patchUsersAvatarByID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.id) || +req.params.id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -135,6 +150,9 @@ const  patchUsersAvatarByID = (req, res) => {
 }
 
 const patchUsersID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     
     if(!Number.isInteger(+req.params.id) || +req.params.id <= 0){
         res.status(404).json({message: "This id is not natural number"});
@@ -183,6 +201,9 @@ const patchUsersID = (req, res) => {
 }
 
 const patchUsersMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const {login, fullName, email} = req.body;
     if(!login && !fullName && !email){
         res.status(404).json({message: "USAGE: Input fields, which you want to change(login, fullName, email).",
@@ -209,6 +230,9 @@ const patchUsersMe = (req, res) => {
 
 
 const  patchUsersAvatarMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
     const decodedToken = token.decodeToken(accessToken);
@@ -241,6 +265,9 @@ const  patchUsersAvatarMe = (req, res) => {
 
 
 const  deleteUsersID = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if(!Number.isInteger(+req.params.id) || +req.params.id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -259,6 +286,9 @@ const  deleteUsersID = (req, res) => {
 }
 
 const deleteUsersMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
     const decodedToken = token.decodeToken(accessToken);
