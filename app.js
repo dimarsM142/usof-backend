@@ -10,7 +10,6 @@ const apiCategoriesRoutes = require('./Routes/api-categories');
 const apiCommentsRoutes = require('./Routes/api-comments');
 
 
-
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({extended: true}));
