@@ -2,21 +2,13 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const cors = require('cors');
+
 const apiAuthRoutes = require('./Routes/api-authorization.js');
 const apiUsersRoutes = require('./Routes/api-users.js');
 const apiPostsRoutes = require('./Routes/api-posts.js');
 const apiCategoriesRoutes = require('./Routes/api-categories');
 const apiCommentsRoutes = require('./Routes/api-comments');
 
-
-const corsOptions ={
-    origin:['http://localhost:3000', 'http://localhost:3001'], 
-    credentials:true,
-    methods:["GET" , "POST" , "PUT", "DELETE"],
-    optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
 
 
 app.use(express.static('public'));
