@@ -20,22 +20,8 @@ const postRegister = (req, res) => {
         res.status(404).json({message: "Check fields to input"});
     }
     else if(password === passwordConfirmation){
-        let mailOptions = {
-            from: 'dimonars11032003@gmail.com',
-            to: email,
-            subject: 'Welcome you in our site - "usof"!',
-            text: `Thanks for registration`
-        }
-    
-        transporter.sendMail(mailOptions, function(error, info){
-            if(error){
-                res.status(400).json({message: "Bad Email!"});
-            }
-            else{
-                let someUserReg = new UserReg(login, password, fullName, email);
-                someUserReg.saveOne(res);
-            }
-        })
+        let someUserReg = new UserReg(login, password, fullName, email);
+        someUserReg.saveOne(res);
      
     }
     else{

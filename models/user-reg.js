@@ -17,7 +17,7 @@ class SaveOne extends Model {
         VALUE("${this.login}", "${bcrypt.hashSync(this.pass, bcrypt.genSaltSync(10))}", "${this.fullName}", "${this.email}", "${defaultPicure}")`;
             mysql.query(sql, (err, result)=>{
                 if(err){
-                    res.status(404).json({message: err});
+                    res.status(404).json({message: err.sqlMessage});
                 }
                 else{
                     
