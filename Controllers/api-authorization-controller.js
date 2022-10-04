@@ -1,15 +1,6 @@
 const UserReg = require("../models/user-reg");
 const UsersLogin = require("../models/user-login");
 const Token = require('../models/token.js');
-const nodemailer = require('nodemailer');
-
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth:{
-        user: 'dimonars11032003@gmail.com',
-        pass:'ejlguxmwvxxsfkxq'
-    }
-});
 
 const postRegister = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
