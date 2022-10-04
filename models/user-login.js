@@ -66,7 +66,7 @@ class UsersLogin extends Model {
                                     from: 'dimonars11032003@gmail.com',
                                     to: email,
                                     subject: 'Sending EMAIL to reset your password',
-                                    text: `This link is only valid for 5 minutes. To change this password copy this link http://${host}${url}/${passToken.token}` 
+                                    text: `This link is only valid for 5 minutes. To change this password copy this link http://localhost:3000/forget-password/${passToken.token}` 
                                 }
                             
                                 transporter.sendMail(mailOptions, function(error, info){
