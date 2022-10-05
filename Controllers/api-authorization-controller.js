@@ -37,7 +37,7 @@ const postLogin = (req, res) => {
     }
 }
 
-const getRefresh = (req, res) => {
+const postRefresh = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -94,7 +94,7 @@ const postResetPassword = (req, res) => {
 module.exports = {
     postRegister, 
     postLogin, 
-    getRefresh, 
+    postRefresh, 
     postLogout, 
     postSendPassword, 
     postResetPassword
