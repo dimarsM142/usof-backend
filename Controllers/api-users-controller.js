@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
 const getUsers = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
 
@@ -52,7 +52,7 @@ const  getUserID = (req, res) => {
 const  getUserMe = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     const accessToken = req.headers.authorization.replace('Bearer ', '');
     let token = new Token();
     const decodedToken = token.decodeToken(accessToken);
