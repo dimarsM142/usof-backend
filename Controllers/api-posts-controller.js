@@ -3,8 +3,8 @@ const Token = require('../models/token.js');
 
 const getPosts = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     let sort;
     let isErr = false;
     let regexp = /^([1-2][0-9]|0?[1-9]|3[01])-(1[0-2]|0?[1-9])-(\d{1,3}|[0-1]\d\d\d|20[0-1]\d|202[0-2])$/;
@@ -64,8 +64,8 @@ const getPosts = (req, res) => {
 
 const getPostByID = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -86,8 +86,8 @@ const getPostByID = (req, res) => {
 
 const getPostByIDComments = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -123,8 +123,8 @@ const getPostByIDComments = (req, res) => {
 
 const postCommentToPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const {content} = req.body;
     if(!content){
         res.status(404).json({message: "Input required field 'content' - it is text of Comment."});
@@ -148,8 +148,8 @@ const postCommentToPost = (req, res) => {
 
 const getCategoriesToPost =  (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     //res.status(200).json(2000);
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
@@ -170,8 +170,8 @@ const getCategoriesToPost =  (req, res) => {
 
 const getLikesOnPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -191,8 +191,8 @@ const getLikesOnPost = (req, res) => {
 
 const postNewPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const {tittle, content, categories} = req.body;
     if(!tittle || !content || !categories){
         let example = {
@@ -225,8 +225,8 @@ const postNewPost = (req, res) => {
 
 const postLikeToPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const {type} = req.body;
     if(type !=='like' && type !=='dislike'){
         res.status(404).json({message:"Input 'type' of like - 'like' or 'dislike':"});
@@ -251,8 +251,8 @@ const postLikeToPost = (req, res) => {
 
 const patchPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     let arrCategories;
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
@@ -297,6 +297,9 @@ const patchPost = (req, res) => {
 }
 
 const deletePost = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -318,8 +321,8 @@ const deletePost = (req, res) => {
 
 const deleteLikeOnPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -340,8 +343,8 @@ const deleteLikeOnPost = (req, res) => {
 
 const patchStatus = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -363,8 +366,8 @@ const patchStatus = (req, res) => {
 
 const patchLocking = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -385,8 +388,8 @@ const patchLocking = (req, res) => {
 
 const getFavourite = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -406,8 +409,8 @@ const getFavourite = (req, res) => {
 
 const postFavourite = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -427,8 +430,8 @@ const postFavourite = (req, res) => {
 
 const deleteFavourite = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -448,8 +451,8 @@ const deleteFavourite = (req, res) => {
 
 const getSubscribe = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -469,8 +472,8 @@ const getSubscribe = (req, res) => {
 
 const postSubscribe = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -490,8 +493,8 @@ const postSubscribe = (req, res) => {
 
 const deleteSubscribe = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }

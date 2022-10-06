@@ -3,8 +3,8 @@ const Token = require('../models/token.js');
 
 const getCategories = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const accessToken = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : ' ';
     let token = new Token();
     const decodedToken = token.decodeToken(accessToken);
@@ -20,8 +20,8 @@ const getCategories = (req, res) => {
 
 const getCategoryByID = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.category_id) || +req.params.category_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -41,8 +41,8 @@ const getCategoryByID = (req, res) => {
 
 const getPostsByCategoryID = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.category_id) || +req.params.category_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
@@ -62,8 +62,8 @@ const getPostsByCategoryID = (req, res) => {
 
 const postCategory = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const {tittle, description} = req.body;
     if(!tittle || !description){
         res.status(404).json({message: "Input required fields 'tittle', 'description'."});
@@ -86,8 +86,8 @@ const postCategory = (req, res) => {
 
 const patchCategory = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     const {tittle, description} = req.body;
     if(!tittle && !description){
         res.status(404).json({message: "Input one of required fields 'tittle', 'description'."});
@@ -113,8 +113,8 @@ const patchCategory = (req, res) => {
 
 const deleteCategory = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
     if(!Number.isInteger(+req.params.category_id) || +req.params.category_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
     }
