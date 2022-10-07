@@ -287,16 +287,31 @@ class Users extends Model {
             });
         
     }
-    getCurrentAvatar(res, userID){
 
-        mysql.query(`SELECT image FROM test WHERE ID=${1}`, (err, result)=>{
+    getCurrentAvatarMe(res, userID){
+        mysql.query(`SELECT picture FROM users WHERE userID=${userID}`, (err, result)=>{
             if(err) {
                 res.status(404).json({message: err});
             }
+            else if(!result[0]) {
+                res.status(404).json({message :"No such user with this ID"});
+            }
             else {
-                fs.writeFileSync('./public/toSend.jpg', result[0].image, 'base64');
-                //res.send("<img src='./public/toSend.jpg' alt='BAD'>");
-                res.sendFile(__dirname + '/../public/test.html')
+                res.status(200).json({picture: result[0].picture});
+            }
+        })
+        
+    }
+    getCurrentAvatar(res, login){
+        mysql.query(`SELECT picture FROM users WHERE login='${login}'`, (err, result)=>{
+            if(err) {
+                res.status(404).json({message: err});
+            }
+            else if(!result[0]) {
+                res.status(404).json({message :"No such user with this ID"});
+            }
+            else {
+                res.status(200).json({picture: result[0].picture});
             }
         })
     }

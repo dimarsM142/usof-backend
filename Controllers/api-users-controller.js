@@ -231,15 +231,6 @@ const patchUsersMe = (req, res) => {
 
 
 const  patchUsersAvatarMe = (req, res) => {
-    //console.log(req.file);
-    console.log("Я ТУТ!");
-    
-    
-    //console.log(req.headers);
-    //console.log(req._readableState.buffer);
-    //console.log(req._readableState.buffer.tail.data.toString('base64'));
-    //fs.writeFileSync('image.png', req._readableState.buffer.tail.data.toString('base64') ,'base64');
-    //console.log(req._readableState.length);
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
@@ -252,10 +243,40 @@ const  patchUsersAvatarMe = (req, res) => {
     else{
         let users = new Users();
         users.updateCurrentAvatarMe(res, decodedToken.result.userID, req.files.file);
-        
     }
 }
 
+const  getUsersAvatarMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    const accessToken = req.headers.authorization.replace('Bearer ', '');
+    let token = new Token();
+    const decodedToken = token.decodeToken(accessToken);
+    if(decodedToken.isErr){
+        res.status(400).json({message: decodedToken.result});
+    }
+    else{
+        let users = new Users();
+        users.getCurrentAvatarMe(res, decodedToken.result.userID);
+    }
+}
+
+const  getUserAvatarLogin = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    console.log(req.params.login);   
+    if(!req.params.login){
+        res.status(404).json({message:'No such user'});
+    } 
+    else{
+        let users = new Users();
+        users.getCurrentAvatar(res, req.params.login);
+    }
+   
+        //users.updateCurrentAvatarMe(res, decodedToken.result.userID, req.files.file);
+}
 
 
 const  deleteUsersID = (req, res) => {
@@ -307,5 +328,8 @@ module.exports = {
     patchUsersMe, 
     deleteUsersID,
     deleteUsersMe,
-    patchUsersAvatarMe
+    patchUsersAvatarMe,
+    getUsersAvatarMe,
+    getUserAvatarLogin
+
 };

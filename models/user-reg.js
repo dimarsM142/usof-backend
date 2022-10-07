@@ -12,7 +12,7 @@ class SaveOne extends Model {
         this.email = email;
     }
     saveOne(res){
-        const defaultPicure = fs.readFileSync(__dirname + '/../public/default.jpg','base64');
+        const defaultPicure = 'https://i.ibb.co/jyqT1by/3-E482896-06-CC-4-D2-A-91-DC-C19-CDBFCBC2-B-w1200-r1.webp';
         const sql = `INSERT INTO users(login, password, fullName, email, picture) 
         VALUE("${this.login}", "${bcrypt.hashSync(this.pass, bcrypt.genSaltSync(10))}", "${this.fullName}", "${this.email}", "${defaultPicure}")`;
             mysql.query(sql, (err, result)=>{
@@ -23,7 +23,6 @@ class SaveOne extends Model {
                     
                     res.status(200).json("Info successfully added!"); 
                 }
-     
             });
 
 
