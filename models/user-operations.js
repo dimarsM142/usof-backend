@@ -47,7 +47,7 @@ class Users extends Model {
             }
             else{
                 if(result[0] && result[0].role === 'admin') {
-                    mysql.query(`SELECT userID, login, fullName, email, picture, rating, role FROM users WHERE login='${wantedId}'`, (err, result)=>{
+                    mysql.query(`SELECT userID, login, fullName, email, rating, role FROM users WHERE login='${wantedId}'`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
@@ -60,7 +60,7 @@ class Users extends Model {
                     })
                 }
                 else {
-                    mysql.query(`SELECT userID, login, fullName, picture, rating FROM users WHERE login='${wantedId}'`, (err, result)=>{
+                    mysql.query(`SELECT userID, login, fullName, rating FROM users WHERE login='${wantedId}'`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
