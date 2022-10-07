@@ -8,7 +8,7 @@ router.get('/api/posts', getPosts);
 router.get('/api/posts/:post_id', getPostByID);
 router.get('/api/posts/:post_id/comments', getPostByIDComments);
 router.post('/api/posts/:post_id/comments', passport.authenticate('jwt', {session: false}), postCommentToPost);
-router.get('/api/posts/:post_id/categories', passport.authenticate('jwt', {session: false}), getCategoriesToPost);
+router.get('/api/posts/:post_id/categories', getCategoriesToPost);
 router.post('/api/posts', passport.authenticate('jwt', {session: false}), postNewPost);
 
 router.patch('/api/posts/:post_id', passport.authenticate('jwt', {session: false}), patchPost);
@@ -20,10 +20,10 @@ router.delete('/api/posts/:post_id', passport.authenticate('jwt', {session: fals
 router.get('/api/posts/:post_id/like', getLikesOnPost);
 router.post('/api/posts/:post_id/like', passport.authenticate('jwt', {session: false}), postLikeToPost);
 router.delete('/api/posts/:post_id/like', passport.authenticate('jwt', {session: false}), deleteLikeOnPost);
-router.get('/api/posts/:post_id/favourite', passport.authenticate('jwt', {session: false}),  getFavourite);
+router.get('/api/posts/:post_id/favourite', getFavourite);//ЗАГАЛЬНОДОСТУПНИМ
 router.post('/api/posts/:post_id/favourite', passport.authenticate('jwt', {session: false}),  postFavourite);
 router.delete('/api/posts/:post_id/favourite', passport.authenticate('jwt', {session: false}), deleteFavourite);
-router.get('/api/posts/:post_id/subscribe', passport.authenticate('jwt', {session: false}), getSubscribe);
+router.get('/api/posts/:post_id/subscribe', getSubscribe);//ЗАГАЛЬНОДОСТУПНИМ
 router.post('/api/posts/:post_id/subscribe', passport.authenticate('jwt', {session: false}), postSubscribe);
 router.delete('/api/posts/:post_id/subscribe', passport.authenticate('jwt', {session: false}), deleteSubscribe);
 

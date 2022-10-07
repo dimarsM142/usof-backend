@@ -21,7 +21,7 @@ class Users extends Model {
             }
             else{
                 if(result[0].role === 'admin') {
-                    mysql.query(`SELECT login, fullName, email, rating, role FROM users ORDER BY rating DESC`, (err, result)=>{
+                    mysql.query(`SELECT userID, login, fullName, email, rating, role FROM users ORDER BY rating DESC`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
@@ -40,17 +40,14 @@ class Users extends Model {
         })
 
     }
-    findUserByID(res, userID, wantedId){
+    findUserByID(res, wantedId, userID = -1){
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
             }
-            else if(!result[0]) {
-                res.status(404).json({message :"No such user"});
-            }
             else{
-                if(result[0].role === 'admin') {
-                    mysql.query(`SELECT login, fullName, email, picture, rating, role FROM users WHERE userID='${wantedId}'`, (err, result)=>{
+                if(result[0] && result[0].role === 'admin') {
+                    mysql.query(`SELECT userID, login, fullName, email, picture, rating, role FROM users WHERE login='${wantedId}'`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
@@ -63,14 +60,24 @@ class Users extends Model {
                     })
                 }
                 else {
-                    res.status(404).json({message: "You do not have the required access rights"});    
+                    mysql.query(`SELECT userID, login, fullName, picture, rating FROM users WHERE login='${wantedId}'`, (err, result)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(!result[0]) {
+                            res.status(404).json({message :"No such user with this ID!"});
+                        }
+                        else{
+                            res.status(200).json(result);
+                        }
+                    })
                 }
             }
         })
     }
 
     findUserMe(res, userID){
-        mysql.query(`SELECT login, fullName, email, rating FROM users WHERE userID='${userID}'`, (err, result)=>{
+        mysql.query(`SELECT userID, login, fullName, email, rating FROM users WHERE userID='${userID}'`, (err, result)=>{
             if(err) {
                 res.status(404).json({message: err});
             }

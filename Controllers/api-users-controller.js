@@ -29,23 +29,24 @@ const getUsers = (req, res) => {
     
 }
 
-const  getUserID = (req, res) => {
+const  getUserLogin = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
-    if(!Number.isInteger(+req.params.id) || +req.params.id <= 0){
-        res.status(404).json({message: "This id is not natural number"});
+    if(!req.params.login){
+        res.status(404).json({message: "No login"});
     }
     else{
-        const accessToken = req.headers.authorization.replace('Bearer ', '');
+        const accessToken = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : ' ';
         let token = new Token();
         const decodedToken = token.decodeToken(accessToken);
+        let users = new Users();
         if(decodedToken.isErr){
-            res.status(400).json({message: decodedToken.result});
+            users.findUserByID(res, req.params.login);
         }
         else{
-            let users = new Users();
-            users.findUserByID(res, decodedToken.result.userID, +req.params.id);
+          
+            users.findUserByID(res, req.params.login, decodedToken.result.userID);
         }
     }
 }
@@ -320,7 +321,7 @@ const deleteUsersMe = (req, res) => {
 
 module.exports = {
     getUsers, 
-    getUserID, 
+    getUserLogin, 
     getUserMe,
     postUsers, 
     patchUsersAvatarByID, 

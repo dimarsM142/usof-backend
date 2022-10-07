@@ -7,7 +7,7 @@ class Categories extends Model {
         super();   
     }
     findCategories(res, authorID = -1){
-        mysql.query(`SELECT tittle, description FROM categories`, (err, fields)=>{
+        mysql.query(`SELECT categoryID, tittle, description FROM categories`, (err, fields)=>{
             if(err) {
                 res.status(404).json({message: err});
             }
@@ -22,7 +22,7 @@ class Categories extends Model {
     }
     findCategoryByID(res, wantedID, authorID = -1){
 
-        mysql.query(`SELECT tittle, description FROM categories WHERE categoryID=${wantedID}`, (err, fields)=>{
+        mysql.query(`SELECT categoryID, tittle, description FROM categories WHERE categoryID=${wantedID}`, (err, fields)=>{
             if(err) {
                 res.status(404).json({message: err});
             }
@@ -119,7 +119,7 @@ class Categories extends Model {
         })
     }
     findPostsByCategoryID(res, wantedID, userID){
-        mysql.query(`SELECT tittle, description FROM categories WHERE categoryID=${wantedID}`, (err, fields)=>{
+        mysql.query(`SELECT categoryID, tittle, description FROM categories WHERE categoryID=${wantedID}`, (err, fields)=>{
             if(err) {
                 res.status(404).json({message: err});
             }
@@ -127,7 +127,7 @@ class Categories extends Model {
                 res.status(404).json({message :"No categories with this ID in DB!"});
             }
             else{
-                mysql.query(`SELECT categoryID, tittle, content FROM posts`, (err, fieldsPosts)=>{
+                mysql.query(`SELECT * FROM posts`, (err, fieldsPosts)=>{
                     if(err) {
                         res.status(404).json({message: err});
                     }
@@ -138,8 +138,14 @@ class Categories extends Model {
                                 if(fieldsPosts[i].categoryID.arr[j] === wantedID){
                                    
                                     let tempObj = {
-                                        nameOfPost: fieldsPosts[i].tittle,
-                                        ContentOfPost: fieldsPosts[i].content
+                                        id: fieldsPosts[i].postID,
+                                        tittle: fieldsPosts[i].tittle,
+                                        content: fieldsPosts[i].content,
+                                        status: fieldsPosts[i].status,
+                                        authorID: fieldsPosts[i].authorID,
+                                        rating: fieldsPosts[i].rating,
+                                        date: fieldsPosts[i].publishDate,
+                                        categoryID: fieldsPosts[i].categoryID
                                     }
                                     arrOfPosts.push(tempObj);
                                     break;
@@ -150,7 +156,7 @@ class Categories extends Model {
                             res.status(200).json({message: "No one post, that associated with this"});
                         }
                         else{
-                            res.status(200).json({nameOfCategory: fields[0].tittle, posts: arrOfPosts});
+                            res.status(200).json({id: fields[0].categoryID, nameOfCategory: fields[0].tittle, posts: arrOfPosts});
                         }
                         
                     }

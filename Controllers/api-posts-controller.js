@@ -160,7 +160,7 @@ const getCategoriesToPost =  (req, res) => {
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();
         if(decodedToken.isErr){
-            res.status(400).json({message: decodedToken.result});
+            posts.findCategoriesToPost(res, +req.params.post_id);
         }
         else{
             posts.findCategoriesToPost(res, +req.params.post_id, decodedToken.result.userID);
@@ -399,7 +399,7 @@ const getFavourite = (req, res) => {
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();
         if(decodedToken.isErr){
-            res.status(400).json({message: decodedToken.result});
+            posts.getFavouritesByPostID(res, +req.params.post_id);
         }
         else{
             posts.getFavouritesByPostID(res, +req.params.post_id, decodedToken.result.userID)
@@ -462,7 +462,7 @@ const getSubscribe = (req, res) => {
         const decodedToken = token.decodeToken(accessToken);
         let posts = new Posts();
         if(decodedToken.isErr){
-            res.status(400).json({message: decodedToken.result});
+            posts.getSubscribesByPostID(res, +req.params.post_id);
         }
         else{
             posts.getSubscribesByPostID(res, +req.params.post_id, decodedToken.result.userID)

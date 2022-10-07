@@ -6,8 +6,7 @@ class Posts extends Model {
         super();   
     }
     filterResArr(arrOfFilters, finalRes, page){
-        
-        if(!arrOfFilters || (!arrOfFilters.category && !arrOfFilters.status && !arrOfFilters.startDate && !arrOfFilters.endDate)){
+        if(!arrOfFilters || (!arrOfFilters.category && !arrOfFilters.status && !arrOfFilters.startDate && !arrOfFilters.endDate && !arrOfFilters.author)){
             if(((page - 1) * 10) > finalRes.length){
                 return {message: "There are no posts on this page"};
             }
@@ -22,8 +21,11 @@ class Posts extends Model {
         }
         else{
             if(arrOfFilters.category){
+                console.log(arrOfFilters.category);
                 let tempArr = [];
                 let arrOfCategories = arrOfFilters.category.split(',');
+                console.log(arrOfCategories);
+                console.log(finalRes[0].categories)
                 let isAdded = false;
                 for(let i = 0; i < finalRes.length; i++){
                     isAdded = false;
@@ -33,7 +35,7 @@ class Posts extends Model {
                         }
                         else{
                             for(let k = 0; k < arrOfCategories.length; k++){
-                                if(finalRes[i].categories[j].tittle === arrOfCategories[k]){
+                                if(finalRes[i].categories[j] === arrOfCategories[k]){
                                     tempArr.push(finalRes[i]);
                                     isAdded = true;
                                     break;
@@ -42,6 +44,7 @@ class Posts extends Model {
                         }                      
                     }                   
                 }
+                console.log(tempArr);
                 finalRes = [];
                 for(let i = 0; i < tempArr.length; i++){
                     finalRes[i] = tempArr[i];
@@ -51,6 +54,18 @@ class Posts extends Model {
                 let tempArr = [];
                 for(let i = 0; i < finalRes.length; i++){
                     if(finalRes[i].status === arrOfFilters.status){
+                        tempArr.push(finalRes[i]);
+                    }
+                }
+                finalRes = [];
+                for(let i = 0; i < tempArr.length; i++){
+                    finalRes[i] = tempArr[i];
+                } 
+            }
+            if(arrOfFilters.author){
+                let tempArr = [];
+                for(let i = 0; i < finalRes.length; i++){
+                    if(finalRes[i].author === arrOfFilters.author){
                         tempArr.push(finalRes[i]);
                     }
                 }
@@ -144,6 +159,7 @@ class Posts extends Model {
                                 }
                             }
                             let currentObj = {
+                                id: arrOfData[i].postID,
                                 author: curAuthor,
                                 tittle: arrOfData[i].tittle,
                                 content: arrOfData[i].content,
@@ -196,6 +212,7 @@ class Posts extends Model {
                             }
                         }
                         let currentObj = {
+                            id: arrOfData[0].postID,
                             author: curAuthor,
                             tittle: arrOfData[0].tittle,
                             content: arrOfData[0].content,
@@ -354,9 +371,11 @@ class Posts extends Model {
                                             }
                                         }
                                         let currentObj = {
+                                            id: fieldsComments[i].commentID,
+                                            comment: fieldsComments[i].content,
+                                            postID: fieldsComments[i].postID,
                                             post: fieldsPosts[0].tittle,
                                             authorOfComment: curAuthor,
-                                            comment: fieldsComments[i].content,
                                             commentDate:fieldsComments[i].publishDate,
                                             rating: fieldsComments[i].rating
                                         }
@@ -365,10 +384,8 @@ class Posts extends Model {
                                     res.status(200).json(finalRes);
                                 }
                             })
-                            //res.status(200).json(fieldsComments);
                         }
                     })
-                    //this.printOnePost(res, fields, 0, []);
                 }
             })
         }
@@ -415,9 +432,11 @@ class Posts extends Model {
                                                         }
                                                     }
                                                     let currentObj = {
+                                                        id: fieldsComments[i].commentID,
+                                                        comment: fieldsComments[i].content,
+                                                        postID: fieldsComments[i].postID,
                                                         post: fieldsPosts[0].tittle,
                                                         authorOfComment: curAuthor,
-                                                        comment: fieldsComments[i].content,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         rating: fieldsComments[i].rating
                                                     }
@@ -465,9 +484,11 @@ class Posts extends Model {
                                                         }
                                                     }
                                                     let currentObj = {
+                                                        id: fieldsComments[i].commentID,
+                                                        comment: fieldsComments[i].content,
+                                                        postID: fieldsComments[i].postID,
                                                         post: fieldsPosts[0].tittle,
                                                         authorOfComment: curAuthor,
-                                                        comment: fieldsComments[i].content,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         rating: fieldsComments[i].rating
                                                     }
@@ -508,16 +529,13 @@ class Posts extends Model {
         })   
     }
 
-    findCategoriesToPost(res, wantedID, userID){
+    findCategoriesToPost(res, wantedID, userID=-1){
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
             }
-            else if(!result[0]) {
-                res.status(404).json({message :"No such user"});
-            }
             else{
-                if(result[0].role === 'admin') {
+                if(result[0] && result[0].role === 'admin') {
                     mysql.query(`SELECT categoryID, tittle FROM posts WHERE postID=${wantedID}`, (err, fieldsPosts)=>{
                         if(err) {
                             res.status(404).json({message: err});
@@ -536,6 +554,7 @@ class Posts extends Model {
                                         for(let j = 0; j < fieldsCategories.length; j++){
                                             if(fieldsPosts[0].categoryID.arr[i] === fieldsCategories[j].categoryID){
                                                 let tempObj = {
+                                                    id: fieldsCategories[j].categoryID,
                                                     tittle: fieldsCategories[j].tittle,
                                                     description:fieldsCategories[j].description
                                                 }
@@ -569,6 +588,7 @@ class Posts extends Model {
                                         for(let j = 0; j < fieldsCategories.length; j++){
                                             if(fieldsPosts[0].categoryID.arr[i] === fieldsCategories[j].categoryID){
                                                 let tempObj = {
+                                                    id: fieldsCategories[j].categoryID,
                                                     tittle: fieldsCategories[j].tittle,
                                                     description:fieldsCategories[j].description
                                                 }
@@ -627,7 +647,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsLikes[i].likeID,
                                                     whoLiked: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
@@ -679,7 +701,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsLikes[i].likeID,
                                                     whoLiked: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
@@ -1213,7 +1237,7 @@ class Posts extends Model {
     }
 
 
-    getFavouritesByPostID(res, wantedID, userID) {
+    getFavouritesByPostID(res, wantedID, userID = -1) {
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
@@ -1255,7 +1279,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsFavourites[i].favouriteID,
                                                     whoAddToFavorite: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle
                                                 }
                                                 finalRes.push(currentObj);
@@ -1304,7 +1330,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsFavourites[i].favouriteID,
                                                     whoAddToFavorite: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle
                                                 }
                                                 finalRes.push(currentObj);
@@ -1419,7 +1447,7 @@ class Posts extends Model {
     }
 
 
-    getSubscribesByPostID(res, wantedID, userID) {
+    getSubscribesByPostID(res, wantedID, userID = -1) {
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
@@ -1460,7 +1488,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsSubscribes[0].subscribeID,
                                                     whoSubscribed: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle
                                                 }
                                                 finalRes.push(currentObj);
@@ -1509,7 +1539,9 @@ class Posts extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id: fieldsSubscribes[0].subscribeID,
                                                     whoSubscribed: curAuthor,
+                                                    postID: fieldsPosts[0].postID,
                                                     post: fieldsPosts[0].tittle
                                                 }
                                                 finalRes.push(currentObj);

@@ -25,7 +25,7 @@ class Comments extends Model {
                                 res.status(404).json({message: err});
                             }
                             else {
-                                mysql.query(`SELECT authorID, tittle, status, rating, locking FROM posts WHERE postID=${fieldsComment[0].postID}`, (err, fieldsPost)=>{
+                                mysql.query(`SELECT postID, authorID, tittle, status, rating, locking FROM posts WHERE postID=${fieldsComment[0].postID}`, (err, fieldsPost)=>{
                                     if(err) {
     
                                         res.status(404).json({message: err});
@@ -33,7 +33,9 @@ class Comments extends Model {
                                     else {
                                         if(fieldsAuthor[0] && fieldsAuthor[0].role === 'admin'){
                                             res.status(200).json({
+                                                id:fieldsComment[0].commentID,
                                                 authorOfComment: fieldsUser[0].login,
+                                                postID: fieldsPost[0].postID,
                                                 post: fieldsPost[0].tittle,
                                                 comment: fieldsComment[0].content,
                                                 dateOfComment: fieldsComment[0].publishDate
@@ -43,7 +45,9 @@ class Comments extends Model {
                                         else{
                                             if((fieldsPost[0].status === 'active' || authorID === fieldsPost[0].authorID) && fieldsPost[0].locking == 'unlocked' && fieldsComment[0].locking == 'unlocked'){
                                                 res.status(200).json({
+                                                    id:fieldsComment[0].commentID,
                                                     authorOfComment: fieldsUser[0].login,
+                                                    postID: fieldsPost[0].postID,
                                                     post: fieldsPost[0].tittle,
                                                     comment: fieldsComment[0].content,
                                                     dateOfComment: fieldsComment[0].publishDate
@@ -107,7 +111,9 @@ class Comments extends Model {
                                                     }
                                                 }
                                                 let currentObj = {
+                                                    id:fieldsLikes[i].likeID,
                                                     whoLiked: curAuthor,
+                                                    commentID:fieldsComments[0].commentID,
                                                     comment: fieldsComments[0].tittle,
                                                     date: fieldsLikes[i].publishDate,
                                                     type: fieldsLikes[i].type
@@ -167,7 +173,9 @@ class Comments extends Model {
                                                             }
                                                         }
                                                         let currentObj = {
+                                                            id:fieldsLikes[i].likeID,
                                                             whoLiked: curAuthor,
+                                                            commentID:fieldsComments[0].commentID,
                                                             comment: fieldsComments[0].tittle,
                                                             date: fieldsLikes[i].publishDate,
                                                             type: fieldsLikes[i].type
