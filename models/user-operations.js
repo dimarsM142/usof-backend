@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const configPath = 'config.json';
 const parsedConfig = JSON.parse(fs.readFileSync(__dirname + '/../' + configPath, 'utf-8'));
-
+const imgbbUploader = require('imgbb-uploader');
 
 class Users extends Model {
     constructor() {
@@ -263,17 +263,29 @@ class Users extends Model {
     }
     
     updateCurrentAvatarMe(res, userID, avatar){
-        mysql.query(`UPDATE users SET picture='${avatar}' WHERE userID=${userID}`, (err, resultUpdating)=>{
-            if(err) {
-                res.status(404).json({message: err});
-            }
-            else if(resultUpdating.affectedRows === 0) {
-                res.status(404).json({message :"No such user with this ID"});
-            }
-            else {
-                res.status(200).json({message: "Picture successfully added!"});
-            }
-        })
+        let imageFile = avatar;
+            imageFile.mv('file.jpg', (err)=>{
+                if(err){
+                    console.log(err);
+                    res.status(400).json({message:'error'});
+                }
+                imgbbUploader('cbfb2ed4fcb5a79cfbf40e535e8b532d', 'file.jpg')
+                .then((response =>{
+                    mysql.query(`UPDATE users SET picture='${response.url}' WHERE userID=${userID}`, (err, resultUpdating)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(resultUpdating.affectedRows === 0) {
+                            res.status(404).json({message :"No such user with this ID"});
+                        }
+                        else {
+                            res.status(200).json({message: "Picture successfully added!"});
+                        }
+                    })
+                }))
+                .catch((error)=>{res.status(400).json({message:"error"})})
+            });
+        
     }
     getCurrentAvatar(res, userID){
 

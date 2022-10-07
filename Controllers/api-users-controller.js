@@ -1,5 +1,6 @@
 const Users = require('../models/user-operations');
 const Token = require('../models/token.js');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 let transporter = nodemailer.createTransport({
@@ -230,6 +231,15 @@ const patchUsersMe = (req, res) => {
 
 
 const  patchUsersAvatarMe = (req, res) => {
+    //console.log(req.file);
+    console.log("Я ТУТ!");
+    
+    
+    //console.log(req.headers);
+    //console.log(req._readableState.buffer);
+    //console.log(req._readableState.buffer.tail.data.toString('base64'));
+    //fs.writeFileSync('image.png', req._readableState.buffer.tail.data.toString('base64') ,'base64');
+    //console.log(req._readableState.length);
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
@@ -240,25 +250,9 @@ const  patchUsersAvatarMe = (req, res) => {
         res.status(400).json({message: decodedToken.result});
     }
     else{
-        if(req._readableState.length === 0){
-            res.status(404).json({message: "No file here"});
-        }
-        else{
-            let type = JSON
-            .parse(JSON
-                .stringify(req.headers)
-                .replace(/-/g, '_'))
-                .content_type
-                .slice(0, JSON.parse(JSON.stringify(req.headers).replace(/-/g, '_')).content_type.indexOf('/'));
-            if(type !=='image'){
-                res.status(404).json({message: "This file is not image"});
-            }
-            else{ 
-                let users = new Users();
-                const image = req._readableState.buffer.head.data.toString('base64');
-                users.updateCurrentAvatarMe(res, decodedToken.result.userID, image);
-            }
-        }
+        let users = new Users();
+        users.updateCurrentAvatarMe(res, decodedToken.result.userID, req.files.file);
+        
     }
 }
 

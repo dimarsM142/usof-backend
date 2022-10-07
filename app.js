@@ -8,6 +8,7 @@ const apiUsersRoutes = require('./Routes/api-users.js');
 const apiPostsRoutes = require('./Routes/api-posts.js');
 const apiCategoriesRoutes = require('./Routes/api-categories');
 const apiCommentsRoutes = require('./Routes/api-comments');
+const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
 const corsOptions ={
@@ -23,6 +24,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(fileUpload());
 require('./middleware/passport')(passport);
 
 
@@ -32,7 +34,7 @@ app.use(apiPostsRoutes);
 app.use(apiCategoriesRoutes);
 app.use(apiCommentsRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 
 app.listen(PORT, ()=>{
