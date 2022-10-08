@@ -20,10 +20,10 @@ router.delete('/api/posts/:post_id', passport.authenticate('jwt', {session: fals
 router.get('/api/posts/:post_id/like', getLikesOnPost);
 router.post('/api/posts/:post_id/like', passport.authenticate('jwt', {session: false}), postLikeToPost);
 router.delete('/api/posts/:post_id/like', passport.authenticate('jwt', {session: false}), deleteLikeOnPost);
-router.get('/api/posts/:post_id/favourite', getFavourite);//ЗАГАЛЬНОДОСТУПНИМ
+router.get('/api/posts/:post_id/favourite', getFavourite);
 router.post('/api/posts/:post_id/favourite', passport.authenticate('jwt', {session: false}),  postFavourite);
 router.delete('/api/posts/:post_id/favourite', passport.authenticate('jwt', {session: false}), deleteFavourite);
-router.get('/api/posts/:post_id/subscribe', getSubscribe);//ЗАГАЛЬНОДОСТУПНИМ
+router.get('/api/posts/:post_id/subscribe', getSubscribe);
 router.post('/api/posts/:post_id/subscribe', passport.authenticate('jwt', {session: false}), postSubscribe);
 router.delete('/api/posts/:post_id/subscribe', passport.authenticate('jwt', {session: false}), deleteSubscribe);
 

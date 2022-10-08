@@ -26,7 +26,7 @@ class Users extends Model {
                             res.status(404).json({message: err});
                         }
                         else if(!result[0]) {
-                            res.status(404).json({message :"No such user"});
+                            res.status(200).json({message :"No such user"});
                         }
                         else{
                             res.status(200).json(result);

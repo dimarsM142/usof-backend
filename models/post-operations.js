@@ -236,7 +236,7 @@ class Posts extends Model {
                     res.status(404).json({message: err});
                 }
                 else if(!fields[0]) {
-                    res.status(404).json({message :"No posts in DB!"});
+                    res.status(200).json({message :"No posts in DB!"});
                 }
                 else{
                     this.printAllPosts(res, fields, arrOfFilters, page);
@@ -258,7 +258,7 @@ class Posts extends Model {
                                 res.status(404).json({message: err});
                             }
                             else if(!fields[0]) {
-                                res.status(404).json({message :"No posts in DB!"});
+                                res.status(200).json({message :"No posts in DB!"});
                             }
                             else{
                                 this.printAllPosts(res, fields, arrOfFilters, page);
@@ -271,7 +271,7 @@ class Posts extends Model {
                                 res.status(404).json({message: err});
                             }
                             else if(!fields[0]) {
-                                res.status(404).json({message :"No posts in DB!"});
+                                res.status(200).json({message :"No posts in DB!"});
                             }
                             else{
                                 this.printAllPosts(res, fields, arrOfFilters, page);
@@ -289,7 +289,7 @@ class Posts extends Model {
                     res.status(404).json({message: err});
                 }
                 else if(!fields[0]) {
-                    res.status(404).json({message :"No posts in DB with this ID!"});
+                    res.status(200).json({message :"No posts in DB with this ID!"});
                 }
                 else{
                     this.printOnePost(res, fields);
@@ -311,7 +311,7 @@ class Posts extends Model {
                                 res.status(404).json({message: err});
                             }
                             else if(!fields[0]) {
-                                res.status(404).json({message :"No posts in DB with this ID!"});
+                                res.status(200).json({message :"No posts in DB with this ID!"});
                             }
                             else{
                                 this.printOnePost(res, fields);
@@ -325,7 +325,7 @@ class Posts extends Model {
                                 res.status(404).json({message: err});
                             }
                             else if(!fields[0]) {
-                                res.status(404).json({message :"No posts in DB with this ID!"});
+                                res.status(200).json({message :"No posts in DB with this ID!"});
                             }
                             else{
 
@@ -353,7 +353,7 @@ class Posts extends Model {
                             res.status(404).json({message: err});
                         }
                         else if(!fieldsComments[0]) {
-                            res.status(404).json({message :"No comment to this Post"});
+                            res.status(200).json({message :"No comment to this Post"});
                         }
                         else{
                             mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
@@ -414,7 +414,7 @@ class Posts extends Model {
                                         res.status(404).json({message: err});
                                     }
                                     else if(!fieldsComments[0]) {
-                                        res.status(404).json({message :"No comment to this Post"});
+                                        res.status(200).json({message :"No comment to this Post"});
                                     }
                                     else{
                                         mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
@@ -466,7 +466,7 @@ class Posts extends Model {
                                         res.status(404).json({message: err});
                                     }
                                     else if(!fieldsComments[0]) {
-                                        res.status(404).json({message :"No comment to this Post"});
+                                        res.status(200).json({message :"No comment to this Post"});
                                     }
                                     else{
                                         mysql.query(`SELECT login, userID FROM users`, (err, fieldsUsers)=>{
@@ -626,7 +626,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsLikes[0]) {
-                                    res.status(404).json({message :"0 likes on this post"});
+                                    res.status(200).json({message :"0 likes on this post"});
                                 }
                                 else {
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -680,7 +680,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsLikes[0]) {
-                                    res.status(404).json({message :"0 likes on this post"});
+                                    res.status(200).json({message :"0 likes on this post"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -1258,7 +1258,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsFavourites[0]) {
-                                    res.status(404).json({message :"0 favourites on this post"});
+                                    res.status(200).json({message :"0 favourites on this post"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -1309,7 +1309,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsFavourites[0]) {
-                                    res.status(404).json({message :"0 favourites on this post"});
+                                    res.status(200).json({message :"0 favourites on this post"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -1467,7 +1467,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsSubscribes[0]) {
-                                    res.status(404).json({message :"0 subcribes to this post"});
+                                    res.status(200).json({message :"0 subcribes to this post"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -1518,7 +1518,7 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsSubscribes[0]) {
-                                    res.status(404).json({message :"0 subcribes to this post"});
+                                    res.status(200).json({message :"0 subcribes to this post"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{

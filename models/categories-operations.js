@@ -12,7 +12,7 @@ class Categories extends Model {
                 res.status(404).json({message: err});
             }
             else if(!fields[0]) {
-                res.status(404).json({message :"No categories in DB!"});
+                res.status(200).json({message :"No categories in DB!"});
             }
             else{
                 res.status(200).json({categories: fields});

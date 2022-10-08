@@ -90,7 +90,7 @@ class Comments extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsLikes[0]) {
-                                    res.status(404).json({message :"0 likes on this comment"});
+                                    res.status(200).json({message :"0 likes on this comment"});
                                 }
                                 else{
                                     mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
@@ -152,7 +152,7 @@ class Comments extends Model {
                                             res.status(404).json({message: err});
                                         }
                                         else if(!fieldsLikes[0]) {
-                                            res.status(404).json({message :"0 likes on this comment"});
+                                            res.status(200).json({message :"0 likes on this comment"});
                                         }
                                         else{                                           
                                             mysql.query(`SELECT login, userID FROM users`, (err, fieldsUser)=>{
