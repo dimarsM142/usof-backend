@@ -12,7 +12,7 @@ const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
 const corsOptions ={
-    origin: 'https://us0f.herokuapp.com/', 
+    origin: 'https://us0f.herokuapp.com', 
     credentials:true,
     methods:["GET" , "POST" , "PATCH", "DELETE"],
     optionSuccessStatus:200
