@@ -391,7 +391,7 @@ class Users extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else if(!fieldsFavourites[0]) {
-                                    res.status(404).json({message :"No favourites"});
+                                    res.status(200).json({message :"No favourites"});
                                 }
                                 else{
                                     
@@ -400,7 +400,7 @@ class Users extends Model {
                                             res.status(404).json({message: err});
                                         }
                                         else if(!fieldsPosts[0]) {
-                                            res.status(404).json({message :"No posts"});
+                                            res.status(200).json({message :"No posts"});
                                         }
                                         else{
                                             let resArr = [];
