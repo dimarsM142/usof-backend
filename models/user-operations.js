@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const configPath = 'config.json';
+const Posts = require('./post-operations.js');
 const parsedConfig = JSON.parse(fs.readFileSync(__dirname + '/../' + configPath, 'utf-8'));
 const imgbbUploader = require('imgbb-uploader');
 
@@ -273,7 +274,6 @@ class Users extends Model {
         let imageFile = avatar;
             imageFile.mv('file.jpg', (err)=>{
                 if(err){
-                    console.log(err);
                     res.status(400).json({message:'error'});
                 }
                 imgbbUploader('cbfb2ed4fcb5a79cfbf40e535e8b532d', 'file.jpg')
@@ -319,6 +319,112 @@ class Users extends Model {
             }
             else {
                 res.status(200).json({picture: result[0].picture});
+            }
+        })
+    }
+
+    getFavouritesByPostsByLogin(res, login, page, userID = -1) {
+        mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
+            if(err) {
+                res.status(404).json({message: err});
+            }
+            else{
+                if(result[0] && result[0].role === 'admin') {
+                    mysql.query(`SELECT userID FROM users WHERE login='${login}'`, (err, fieldsUsers)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(!fieldsUsers[0]) {
+                            res.status(404).json({message :"No such user"});
+                        }
+                        else{
+                            mysql.query(`SELECT * FROM favourites WHERE authorID=${fieldsUsers[0].userID}`, (err, fieldsFavourites)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else if(!fieldsFavourites[0]) {
+                                    res.status(404).json({message :"No favourites"});
+                                }
+                                else{
+                                    mysql.query('SELECT * FROM posts ORDER BY rating DESC', (err, fieldsPosts)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsPosts[0]) {
+                                            res.status(404).json({message :"No posts"});
+                                        }
+                                        else{
+                                            let resArr = [];
+                                            
+                                            for(let j = 0; j < fieldsPosts.length; j++){
+                                                for(let i = 0; i < fieldsFavourites.length; i++){
+                                                    if(fieldsFavourites[i].postID === fieldsPosts[j].postID){
+                                                        resArr.push(fieldsPosts[j]);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            let posts = new Posts();
+                                            posts.printAllPosts(res, resArr, [], page);
+                                        }
+                                    })
+                                    
+                                }
+                            })
+                            
+                        }
+                    })
+    
+                }
+                else{
+
+                    mysql.query(`SELECT userID FROM users WHERE login='${login}'`, (err, fieldsUsers)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(!fieldsUsers[0]) {
+                            res.status(404).json({message :"No such user"});
+                        }
+                        else{
+                            mysql.query(`SELECT * FROM favourites WHERE authorID=${fieldsUsers[0].userID}`, (err, fieldsFavourites)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else if(!fieldsFavourites[0]) {
+                                    res.status(404).json({message :"No favourites"});
+                                }
+                                else{
+                                    
+                                    mysql.query(`SELECT * FROM posts WHERE (status='active' OR (status='inactive' AND authorID='${userID}')) AND locking='unlocked' ORDER BY rating DESC`, (err, fieldsPosts)=>{
+                                        if(err) {
+                                            res.status(404).json({message: err});
+                                        }
+                                        else if(!fieldsPosts[0]) {
+                                            res.status(404).json({message :"No posts"});
+                                        }
+                                        else{
+                                            let resArr = [];
+                                            
+                                            for(let j = 0; j < fieldsPosts.length; j++){
+                                                for(let i = 0; i < fieldsFavourites.length; i++){
+                                                    if(fieldsFavourites[i].postID === fieldsPosts[j].postID){
+                                                        resArr.push(fieldsPosts[j]);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            let posts = new Posts();
+                                            posts.printAllPosts(res, resArr, [], page);
+                                        }
+                                    })
+                                    
+                                }
+                            })
+                            
+                        }
+                    })
+                
+                }
             }
         })
     }

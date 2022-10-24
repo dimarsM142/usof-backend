@@ -318,6 +318,27 @@ const deleteUsersMe = (req, res) => {
     
 }
 
+const getFavouritesUserLogin = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    const accessToken = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : ' ';
+    let token = new Token();
+    let users = new Users();
+    const decodedToken = token.decodeToken(accessToken);
+    if(!Number.isInteger(+req.query.page) || +req.query.page <= 0){
+        res.status(404).json({message: "This page is not natural number"});
+    }
+    else{
+        if(decodedToken.isErr){
+            users.getFavouritesByPostsByLogin(res, req.params.login, +req.query.page)
+        }
+        else{
+            users.getFavouritesByPostsByLogin(res, req.params.login, +req.query.page, decodedToken.result.userID);
+        }
+    }
+   
+}
 
 module.exports = {
     getUsers, 
@@ -331,6 +352,7 @@ module.exports = {
     deleteUsersMe,
     patchUsersAvatarMe,
     getUsersAvatarMe,
-    getUserAvatarLogin
+    getUserAvatarLogin,
+    getFavouritesUserLogin
 
 };
