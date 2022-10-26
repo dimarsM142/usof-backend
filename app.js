@@ -10,6 +10,8 @@ const apiCategoriesRoutes = require('./Routes/api-categories');
 const apiCommentsRoutes = require('./Routes/api-comments');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
+var mysqlAdmin = require('node-mysql-admin');
+app.use(mysqlAdmin(app));
 
 const corsOptions ={
     origin:['http://localhost:3000', 'https://us0f.herokuapp.com'], 

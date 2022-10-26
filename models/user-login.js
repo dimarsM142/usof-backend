@@ -19,7 +19,7 @@ class UsersLogin extends Model {
         super();
     }
     userLogin(res, login, pass){
-        const sql = `SELECT userID, login, password FROM users WHERE login='${login}'`;
+        const sql = `SELECT userID, login, password, role FROM users WHERE login='${login}'`;
         mysql.query(sql, (err, result)=>{
             if(err){
                 res.status(404).json({message: err});
@@ -31,7 +31,7 @@ class UsersLogin extends Model {
                 bcrypt.compare(pass, result[0].password, (err, resultPass)=>{
                     if(resultPass){
                         let token = new Token();
-                        token.updateOneToken(res, result[0].userID);
+                        token.updateOneToken(res, result[0].userID, result[0].role);
                         //res.status(200).json({token: token, userID: result[0].userID, Login: result[0].Login, email: result[0].email, password: result[0].password});
                     }
                     else{

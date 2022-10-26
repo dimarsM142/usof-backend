@@ -11,7 +11,7 @@ class Token extends Model {
     constructor(){
         super();   
     }
-    updateOneToken(res, userID){
+    updateOneToken(res, userID, role){
         mysql.query(`DELETE FROM tokens WHERE userID='${userID}'`, (err, result) =>{
             if(err){
                 res.status(404).json({message: err});
@@ -28,7 +28,8 @@ class Token extends Model {
                     else{
                         res.status(200).json({
                             AccessToken: tokens.Access,
-                            RefreshToken: tokens.Refresh.token
+                            RefreshToken: tokens.Refresh.token,
+                            role: role
                         });
                     }
                 });
@@ -65,7 +66,18 @@ class Token extends Model {
                     res.status(404).json({message: "No such refresh token"});
                 }
                 else{
-                    this.updateOneToken(res, result[0].userID);
+                    mysql.query(`SELECT role FROM users WHERE userID=${result[0].userID}`, (err, fieldsUsers)=>{
+                        if(err){
+                            res.status(404).json({message: err});
+                        }
+                        else if(!fieldsUsers[0]){
+                            res.status(404).json({message: "No such refresh token"});
+                        }
+                        else{
+                            this.updateOneToken(res, result[0].userID, fieldsUsers[0].role);
+                        }
+                    })
+                    
                 }
             })
         }
