@@ -10,7 +10,7 @@ const apiCategoriesRoutes = require('./Routes/api-categories');
 const apiCommentsRoutes = require('./Routes/api-comments');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
-var mysqlAdmin = require('node-mysql-admin');
+const mysqlAdmin = require('node-mysql-admin');
 app.use(mysqlAdmin(app));
 
 const corsOptions ={

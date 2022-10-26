@@ -11,10 +11,13 @@
         "express-session": "^1.17.3",
         "fs": "^0.0.1-security",
         "imgbb-uploader": "^1.5.0",
+        "install": "^0.13.0",
         "jsonwebtoken": "^8.5.1",
         "multer": "^1.4.5-lts.1",
         "mysql2": "^2.3.3",
+        "node-mysql-admin": "^0.1.8",
         "nodemailer": "^6.7.8",
+        "npm": "^8.19.2",
         "passport": "^0.6.0",
         "passport-jwt": "^4.0.0",
         "uuid": "^9.0.0"
