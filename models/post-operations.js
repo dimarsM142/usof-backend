@@ -220,6 +220,7 @@ class Posts extends Model {
                             date: arrOfData[0].publishDate,
                             status: arrOfData[0].status,
                             rating: arrOfData[0].rating,
+                            locking: arrOfData[0].locking,
                             categories: categories
                         }
                         finalRes.push(currentObj);   
@@ -439,6 +440,7 @@ class Posts extends Model {
                                                         post: fieldsPosts[0].tittle,
                                                         authorOfComment: curAuthor,
                                                         commentDate:fieldsComments[i].publishDate,
+                                                        locking: fieldsComments[i].locking,
                                                         rating: fieldsComments[i].rating
                                                     }
                                                     finalRes.push(currentObj);
