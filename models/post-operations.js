@@ -166,6 +166,7 @@ class Posts extends Model {
                                 date: arrOfData[i].publishDate,
                                 status: arrOfData[i].status,
                                 rating: arrOfData[i].rating,
+                                locking: arrOfData[i].locking,
                                 categories: categories
                             }
                             finalRes.push(currentObj);
