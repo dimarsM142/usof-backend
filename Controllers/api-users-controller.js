@@ -125,29 +125,26 @@ const  patchUsersAvatarByID = (req, res) => {
             res.status(400).json({message: decodedToken.result});
         }
         else{
-        if(req._readableState.length === 0){
-            res.status(404).json({message: "No file here"});
+            let users = new Users();
+            users.updateCurrentAvatar(res, decodedToken.result.userID, req.files.file, +req.params.id);
         }
-            else{
-                let type = JSON
-                .parse(JSON
-                    .stringify(req.headers)
-                    .replace(/-/g, '_'))
-                    .content_type
-                    .slice(0, JSON.parse(JSON.stringify(req.headers).replace(/-/g, '_')).content_type.indexOf('/'));
-                if(type !=='image'){
-                    res.status(404).json({message: "This file is not image"});
-                }
-                else{
-                    let users = new Users();
-                    
-                    const image = req._readableState.buffer.head.data.toString('base64');
-                    users.updateCurrentAvatar(res, decodedToken.result.userID, image, +req.params.id);
-                    //users.getCurrentAvatar(res, decodedToken.result.userID);
-                    //res.status(200).json({message: "Ok"});
-                }
-            }
-        }
+        
+    }
+}
+
+const  patchUsersAvatarMe = (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    const accessToken = req.headers.authorization.replace('Bearer ', '');
+    let token = new Token();
+    const decodedToken = token.decodeToken(accessToken);
+    if(decodedToken.isErr){
+        res.status(400).json({message: decodedToken.result});
+    }
+    else{
+        let users = new Users();
+        users.updateCurrentAvatarMe(res, decodedToken.result.userID, req.files.file);
     }
 }
 
@@ -225,25 +222,6 @@ const patchUsersMe = (req, res) => {
             let users = new Users();
             users.updateUserMe(res, decodedToken.result.userID, login, email, fullName);
         }
-    }
-}
-
-
-
-
-const  patchUsersAvatarMe = (req, res) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
-    const accessToken = req.headers.authorization.replace('Bearer ', '');
-    let token = new Token();
-    const decodedToken = token.decodeToken(accessToken);
-    if(decodedToken.isErr){
-        res.status(400).json({message: decodedToken.result});
-    }
-    else{
-        let users = new Users();
-        users.updateCurrentAvatarMe(res, decodedToken.result.userID, req.files.file);
     }
 }
 

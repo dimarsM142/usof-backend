@@ -251,17 +251,27 @@ class Users extends Model {
             }
             else{
                 if(result[0].role === 'admin') {
-                    mysql.query(`UPDATE users SET picture='${avatar}' WHERE userID=${wantedID}`, (err, resultUpdating)=>{
-                        if(err) {
-                            res.status(404).json({message: err});
+                    let imageFile = avatar;
+                    imageFile.mv('file.jpg', (err)=>{
+                        if(err){
+                            res.status(400).json({message:'error'});
                         }
-                        else if(resultUpdating.affectedRows === 0) {
-                            res.status(404).json({message :"No such user with this ID"});
-                        }
-                        else {
-                            res.status(200).json({message: "Picture successfully added!"});
-                        }
-                    })
+                        imgbbUploader('cbfb2ed4fcb5a79cfbf40e535e8b532d', 'file.jpg')
+                        .then((response =>{
+                            mysql.query(`UPDATE users SET picture='${response.url}' WHERE userID=${wantedID}`, (err, resultUpdating)=>{
+                                if(err) {
+                                    res.status(404).json({message: err});
+                                }
+                                else if(resultUpdating.affectedRows === 0) {
+                                    res.status(404).json({message :"No such user with this ID"});
+                                }
+                                else {
+                                    res.status(200).json({message: "Picture successfully added!"});
+                                }
+                            })
+                        }))
+                        .catch((error)=>{res.status(400).json({message:"error"})})
+                    });
                 }
                 else {
                     res.status(404).json({message: "You do not have the required access rights"});    
