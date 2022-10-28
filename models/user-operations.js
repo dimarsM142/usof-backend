@@ -22,7 +22,7 @@ class Users extends Model {
             }
             else{
                 if(result[0].role === 'admin') {
-                    mysql.query(`SELECT userID, login, fullName, email, rating, role FROM users ORDER BY rating DESC`, (err, result)=>{
+                    mysql.query(`SELECT userID, login, fullName, email, rating, role, picture FROM users ORDER BY rating DESC`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
@@ -48,7 +48,7 @@ class Users extends Model {
             }
             else{
                 if(result[0] && result[0].role === 'admin') {
-                    mysql.query(`SELECT userID, login, fullName, email, rating, role FROM users WHERE login='${wantedId}'`, (err, result)=>{
+                    mysql.query(`SELECT userID, login, fullName, email, rating, role, picture FROM users WHERE login='${wantedId}'`, (err, result)=>{
                         if(err) {
                             res.status(404).json({message: err});
                         }
