@@ -92,7 +92,7 @@ class Users extends Model {
                 
     }
     saveOneWithRole(res, userID, login, pass, fullName, email, role){
-        const defaultPicure = fs.readFileSync(__dirname + '/../public/default.jpg','base64');
+        const defaultPicure = 'https://i.ibb.co/jyqT1by/3-E482896-06-CC-4-D2-A-91-DC-C19-CDBFCBC2-B-w1200-r1.webp';
         mysql.query(`SELECT role FROM users WHERE userID=${userID}`, (err, result) => {
             if(err) {
                 res.status(404).json({message: err});
