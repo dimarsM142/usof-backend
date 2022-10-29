@@ -101,7 +101,7 @@ class Posts extends Model {
             if(arrOfFilters.name){
                 let tempArr = [];
                 for(let i = 0; i < finalRes.length; i++){
-                    if(finalRes[i].content.toLowerCase().includes(arrOfFilters.name.toLowerCase())){
+                    if(finalRes[i].content.toLowerCase().includes(arrOfFilters.name.toLowerCase()) || finalRes[i].tittle.toLowerCase().includes(arrOfFilters.name.toLowerCase())){
                         tempArr.push(finalRes[i]);
                     }
                 }
