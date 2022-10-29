@@ -100,17 +100,10 @@ class Posts extends Model {
             }
             if(arrOfFilters.name){
                 let tempArr = [];
-                console.log("START");
                 for(let i = 0; i < finalRes.length; i++){
-                    /*if(finalRes[i].author === arrOfFilters.author){
-                        tempArr.push(finalRes[i]);
-                    }*/
                     if(finalRes[i].content.toLowerCase().includes(arrOfFilters.name.toLowerCase())){
-                        console.log(finalRes[i].content);
                         tempArr.push(finalRes[i]);
-                        console.log(arrOfFilters.name);
                     }
-                    console.log(finalRes[i].content.includes(arrOfFilters.name));
                 }
                 finalRes = [];
                 for(let i = 0; i < tempArr.length; i++){
