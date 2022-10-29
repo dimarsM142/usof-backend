@@ -6,10 +6,10 @@ class Posts extends Model {
         super();   
     }
     filterResArr(arrOfFilters, finalRes, page){
-        if(!arrOfFilters || (!arrOfFilters.category && !arrOfFilters.status && !arrOfFilters.startDate && !arrOfFilters.endDate && !arrOfFilters.author)){
+        if(!arrOfFilters || (!arrOfFilters.category && !arrOfFilters.status && !arrOfFilters.startDate && !arrOfFilters.endDate && !arrOfFilters.author && !arrOfFilters.name)){
             if(((page - 1) * 10) > finalRes.length){
                 return {message: "There are no posts on this page"};
-            }
+            } 
             let resArr = [];
             for(let i = (page - 1) * 10; i < (page - 1) * 10 + 10; i++){
                 if(i === finalRes.length){
@@ -21,11 +21,8 @@ class Posts extends Model {
         }
         else{
             if(arrOfFilters.category){
-                console.log(arrOfFilters.category);
                 let tempArr = [];
                 let arrOfCategories = arrOfFilters.category.split(',');
-                console.log(arrOfCategories);
-                console.log(finalRes[0].categories)
                 let isAdded = false;
                 for(let i = 0; i < finalRes.length; i++){
                     isAdded = false;
@@ -44,7 +41,6 @@ class Posts extends Model {
                         }                      
                     }                   
                 }
-                console.log(tempArr);
                 finalRes = [];
                 for(let i = 0; i < tempArr.length; i++){
                     finalRes[i] = tempArr[i];
@@ -101,6 +97,25 @@ class Posts extends Model {
                 for(let i = 0; i < tempArr.length; i++){
                     finalRes[i] = tempArr[i];
                 } 
+            }
+            if(arrOfFilters.name){
+                let tempArr = [];
+                console.log("START");
+                for(let i = 0; i < finalRes.length; i++){
+                    /*if(finalRes[i].author === arrOfFilters.author){
+                        tempArr.push(finalRes[i]);
+                    }*/
+                    if(finalRes[i].content.toLowerCase().includes(arrOfFilters.name.toLowerCase())){
+                        console.log(finalRes[i].content);
+                        tempArr.push(finalRes[i]);
+                        console.log(arrOfFilters.name);
+                    }
+                    console.log(finalRes[i].content.includes(arrOfFilters.name));
+                }
+                finalRes = [];
+                for(let i = 0; i < tempArr.length; i++){
+                    finalRes[i] = tempArr[i];
+                }
             }
             if(!finalRes.length){
                 return {message: "There are no posts matching these filters"};
