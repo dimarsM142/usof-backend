@@ -459,10 +459,29 @@ class Posts extends Model {
                                                 let finalRes = [];
                                                 for(let i = 0; i < fieldsComments.length; i++){
                                                     let curAuthor = '';
+                                                    let replyComment = '';
+                                                    let replyAuthor = '';
                                                     for(let j = 0; j < fieldsUsers.length; j++){
                                                         if(fieldsComments[i].authorID == fieldsUsers[j].userID){
                                                             curAuthor = fieldsUsers[j].login;
                                                             break;
+                                                        }
+                                                    }
+                                                                                                        
+                                                    if(fieldsComments[i].replyID){
+                                                        for(let j = 0; j < fieldsComments.length; j++){
+                                                            if(fieldsComments[i].replyID == fieldsComments[j].commentID){
+                                                                replyComment = fieldsComments[j].content;
+                                                                for(let k = 0; k < fieldsUsers.length; k++){
+                                                                    if(fieldsComments[j].authorID == fieldsUsers[k].userID){
+                                                                        replyAuthor = fieldsUsers[k].login;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                break;
+                                                                
+                                                            }
+                                                            
                                                         }
                                                     }
                                                     let currentObj = {
@@ -474,7 +493,9 @@ class Posts extends Model {
                                                         commentDate:fieldsComments[i].publishDate,
                                                         locking: fieldsComments[i].locking,
                                                         rating: fieldsComments[i].rating,
-                                                        replyID: fieldsComments[i].replyID
+                                                        replyID: fieldsComments[i].replyID,
+                                                        replyComment: replyComment,
+                                                        replyAuthor: replyAuthor
                                                     }
                                                     finalRes.push(currentObj);
                                                 }
@@ -513,10 +534,31 @@ class Posts extends Model {
                                                 let finalRes = [];
                                                 for(let i = 0; i < fieldsComments.length; i++){
                                                     let curAuthor = '';
+                                                    let replyComment = '';
+                                                    let replyAuthor = '';
                                                     for(let j = 0; j < fieldsUsers.length; j++){
                                                         if(fieldsComments[i].authorID == fieldsUsers[j].userID){
                                                             curAuthor = fieldsUsers[j].login;
                                                             break;
+                                                        }
+                                                    }
+                                                    
+                                                    
+                                                                                                        
+                                                    if(fieldsComments[i].replyID){
+                                                        for(let j = 0; j < fieldsComments.length; j++){
+                                                            if(fieldsComments[i].replyID == fieldsComments[j].commentID){
+                                                                replyComment = fieldsComments[j].content;
+                                                                for(let k = 0; k < fieldsUsers.length; k++){
+                                                                    if(fieldsComments[j].authorID == fieldsUsers[k].userID){
+                                                                        replyAuthor = fieldsUsers[k].login;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                break;
+                                                                
+                                                            }
+                                                            
                                                         }
                                                     }
                                                     let currentObj = {
@@ -527,7 +569,9 @@ class Posts extends Model {
                                                         authorOfComment: curAuthor,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         rating: fieldsComments[i].rating,
-                                                        replyID: fieldsComments[i].replyID
+                                                        replyID: fieldsComments[i].replyID,
+                                                        replyComment: replyComment,
+                                                        replyAuthor: replyAuthor
                                                     }
                                                     finalRes.push(currentObj);
                                                 }

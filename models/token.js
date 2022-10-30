@@ -12,29 +12,24 @@ class Token extends Model {
         super();   
     }
     updateOneToken(res, userID, role){
-        mysql.query(`DELETE FROM tokens WHERE userID='${userID}'`, (err, result) =>{
+
+        let tokens = {
+            Access: generateAccessToken(userID),
+            Refresh: generateRefreshToken()
+        }
+        mysql.query(`INSERT INTO tokens(tokenID, userID) Value('${tokens.Refresh.id}', ${userID});`, (err, result)=>{
             if(err){
-                res.status(404).json({message: err});
+                res.status(404).json("BAD INPUT");
             }
             else{
-                let tokens = {
-                    Access: generateAccessToken(userID),
-                    Refresh: generateRefreshToken()
-                }
-                mysql.query(`INSERT INTO tokens(tokenID, userID) Value('${tokens.Refresh.id}', ${userID});`, (err, result)=>{
-                    if(err){
-                        res.status(404).json("BAD INPUT");
-                    }
-                    else{
-                        res.status(200).json({
-                            AccessToken: tokens.Access,
-                            RefreshToken: tokens.Refresh.token,
-                            role: role
-                        });
-                    }
+                res.status(200).json({
+                    AccessToken: tokens.Access,
+                    RefreshToken: tokens.Refresh.token,
+                    role: role
                 });
             }
-        })
+        });
+
     }
     generateNewToken(res, refreshToken){
         try{
