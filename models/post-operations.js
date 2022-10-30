@@ -371,15 +371,36 @@ class Posts extends Model {
                                     res.status(404).json({message: err});
                                 }
                                 else{
+                                    
                                     let finalRes = [];
                                     for(let i = 0; i < fieldsComments.length; i++){
                                         let curAuthor = '';
+                                        let replyComment = '';
+                                        let replyAuthor = '';
                                         for(let j = 0; j < fieldsUsers.length; j++){
                                             if(fieldsComments[i].authorID == fieldsUsers[j].userID){
                                                 curAuthor = fieldsUsers[j].login;
                                                 break;
                                             }
                                         }
+                                        
+                                        if(fieldsComments[i].replyID){
+                                            for(let j = 0; j < fieldsComments.length; j++){
+                                                if(fieldsComments[i].replyID == fieldsComments[j].commentID){
+                                                    replyComment = fieldsComments[j].content;
+                                                    for(let k = 0; k < fieldsUsers.length; k++){
+                                                        if(fieldsComments[j].authorID == fieldsUsers[k].userID){
+                                                            replyAuthor = fieldsUsers[k].login;
+                                                            break;
+                                                        }
+                                                    }
+                                                    break;
+                                                    
+                                                }
+                                                
+                                            }
+                                        }
+                                        
                                         let currentObj = {
                                             id: fieldsComments[i].commentID,
                                             comment: fieldsComments[i].content,
@@ -387,7 +408,10 @@ class Posts extends Model {
                                             post: fieldsPosts[0].tittle,
                                             authorOfComment: curAuthor,
                                             commentDate:fieldsComments[i].publishDate,
-                                            rating: fieldsComments[i].rating
+                                            rating: fieldsComments[i].rating,
+                                            replyID: fieldsComments[i].replyID,
+                                            replyComment: replyComment,
+                                            replyAuthor: replyAuthor
                                         }
                                         finalRes.push(currentObj);
                                     }
@@ -449,7 +473,8 @@ class Posts extends Model {
                                                         authorOfComment: curAuthor,
                                                         commentDate:fieldsComments[i].publishDate,
                                                         locking: fieldsComments[i].locking,
-                                                        rating: fieldsComments[i].rating
+                                                        rating: fieldsComments[i].rating,
+                                                        replyID: fieldsComments[i].replyID
                                                     }
                                                     finalRes.push(currentObj);
                                                 }
@@ -501,7 +526,8 @@ class Posts extends Model {
                                                         post: fieldsPosts[0].tittle,
                                                         authorOfComment: curAuthor,
                                                         commentDate:fieldsComments[i].publishDate,
-                                                        rating: fieldsComments[i].rating
+                                                        rating: fieldsComments[i].rating,
+                                                        replyID: fieldsComments[i].replyID
                                                     }
                                                     finalRes.push(currentObj);
                                                 }
@@ -518,7 +544,7 @@ class Posts extends Model {
             })
         }
     }
-    CreateCommentToPostID(res, wantedID, userID, content){
+    CreateCommentToPostID(res, wantedID, userID, content, replyID = null){
         mysql.query(`SELECT * FROM posts WHERE postID=${wantedID} AND locking='unlocked' AND status='active'`, (err, fieldsPosts)=>{
             if(err) {
                 res.status(404).json({message: err});
@@ -527,15 +553,43 @@ class Posts extends Model {
                 res.status(404).json({message :"No such active posts with this 'post_id'"});
             }
             else{
-                mysql.query(`INSERT INTO comment(authorID, postID, content) 
-                VALUES('${userID}','${wantedID}', '${content}')`, (err, fields)=>{
-                    if(err){
-                        res.status(400).json({error: err});
-                    }
-                    else{
-                        res.status(200).json("Comment succesfully added!");
-                    }
-                })
+                if(replyID){
+                    mysql.query(`SELECT * FROM comment WHERE commentID=${replyID}`, (err, fieldsComments)=>{
+                        if(err) {
+                            res.status(404).json({message: err});
+                        }
+                        else if(!fieldsComments[0]) {
+                            res.status(404).json({message :"No such active comments"});
+                        }
+                        else if(fieldsComments[0].postID != wantedID){
+                            res.status(404).json({message :"No such comments you want to reply"});
+                        }
+                        else{
+                            mysql.query(`INSERT INTO comment(authorID, postID, content, replyID) 
+                            VALUES('${userID}','${wantedID}', '${content}', '${replyID}')`, (err, fields)=>{
+                                if(err){
+                                    res.status(400).json({error: err});
+                                }
+                                else{
+                                    res.status(200).json("Comment succesfully added!");
+                                }
+                            })
+                        }
+                    })
+                   
+                }
+                else{
+                    mysql.query(`INSERT INTO comment(authorID, postID, content) 
+                    VALUES('${userID}','${wantedID}', '${content}')`, (err, fields)=>{
+                        if(err){
+                            res.status(400).json({error: err});
+                        }
+                        else{
+                            res.status(200).json("Comment succesfully added!");
+                        }
+                    })
+                }
+                
             }
         })   
     }

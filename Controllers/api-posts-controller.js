@@ -125,12 +125,15 @@ const postCommentToPost = (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Origin, Authorization');
-    const {content} = req.body;
+    const {content, replyID} = req.body;
     if(!content){
         res.status(404).json({message: "Input required field 'content' - it is text of Comment."});
     }
     else if(!Number.isInteger(+req.params.post_id) || +req.params.post_id <= 0){
         res.status(404).json({message: "This id is not natural number"});
+    }
+    else if(replyID && (!Number.isInteger(+replyID) || +replyID <= 0)){
+        res.status(404).json({message: "This replyID is not natural number"});
     }
     else{
         const accessToken = req.headers.authorization.replace('Bearer ', '');
@@ -141,7 +144,13 @@ const postCommentToPost = (req, res) => {
             res.status(400).json({message: decodedToken.result});
         }
         else{
-            posts.CreateCommentToPostID(res, +req.params.post_id, decodedToken.result.userID, content);
+            if(replyID){
+                posts.CreateCommentToPostID(res, +req.params.post_id, decodedToken.result.userID, content, +replyID);
+            }
+            else{
+                posts.CreateCommentToPostID(res, +req.params.post_id, decodedToken.result.userID, content);
+            }
+            
         }
     }
 }
